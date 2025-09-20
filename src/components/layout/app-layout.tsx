@@ -15,30 +15,24 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const authRoutes = ['/login', '/signup', '/forgot-password'];
 
   useEffect(() => {
-    if (!loading && !user && !authRoutes.includes(pathname) && pathname !== '/onboarding') {
+    if (loading) return;
+
+    if (!user && !authRoutes.includes(pathname) && pathname !== '/onboarding') {
       router.push('/login');
+    } else if (user && authRoutes.includes(pathname)) {
+      router.push('/home');
     }
-  }, [user, loading, pathname, router, authRoutes]);
+  }, [user, loading, pathname, router]);
 
 
   const showNav = !noNavRoutes.includes(pathname) && !!user;
 
-  if (loading && !user) {
-    // You can return a global loading spinner here
+  if (loading || (!user && !authRoutes.includes(pathname) && pathname !== '/onboarding') || (user && authRoutes.includes(pathname))) {
     return (
       <div className="flex items-center justify-center min-h-screen">
           <div className="text-primary">Loading...</div>
       </div>
     );
-  }
-  
-  if (!user && !authRoutes.includes(pathname) && pathname !== '/onboarding') {
-    return null; // or a redirect component
-  }
-  
-  if (user && authRoutes.includes(pathname)) {
-    router.push('/home');
-    return null;
   }
 
   return (
