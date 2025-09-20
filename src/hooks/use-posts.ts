@@ -43,24 +43,25 @@ export interface Post {
 const initialMockPosts: Omit<Post, 'id'>[] = [
   {
     authorId: 'mock-user-1',
-    authorName: 'John Doe',
+    authorName: 'Aarav Sharma',
     authorAvatar: 'https://picsum.photos/seed/avatar1/100',
-    authorAvatarFallback: 'JD',
+    authorAvatarFallback: 'AS',
     text: "My tomato plants are getting these weird yellow spots on the leaves. I've tried neem oil but it doesn't seem to be working. Any suggestions?",
     image: 'https://picsum.photos/seed/sick-plant/600/400',
-    imageHint: 'sick plant',
+    imageHint: 'diseased plant',
     likes: 12,
     likedBy: [],
     comments: [
-        { id: 'comment-1-1', authorId: 'mock-user-2', authorName: 'Jane Smith', authorAvatar: 'https://picsum.photos/seed/avatar2/100', authorAvatarFallback: 'JS', text: 'It might be a nutrient deficiency. Have you checked your soil pH?', timestamp: Date.now() - 1000 * 60 * 30 },
+        { id: 'comment-1-1', authorId: 'mock-user-2', authorName: 'Priya Patel', authorAvatar: 'https://picsum.photos/seed/avatar2/100', authorAvatarFallback: 'PP', text: 'It might be a nutrient deficiency. Have you checked your soil pH?', timestamp: Date.now() - 1000 * 60 * 30 },
+        { id: 'comment-1-2', authorId: 'mock-user-3', authorName: 'Rohan Gupta', authorAvatar: 'https://picsum.photos/seed/avatar3/100', authorAvatarFallback: 'RG', text: 'Looks like early blight. A copper-based fungicide should help.', timestamp: Date.now() - 1000 * 60 * 15 },
     ],
     timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
   },
   {
     authorId: 'mock-user-2',
-    authorName: 'Jane Smith',
+    authorName: 'Priya Patel',
     authorAvatar: 'https://picsum.photos/seed/avatar2/100',
-    authorAvatarFallback: 'JS',
+    authorAvatarFallback: 'PP',
     text: "Just wanted to share my success with using a baking soda spray for powdery mildew on my zucchini! Here's a before and after. So happy with the results!",
     image: 'https://picsum.photos/seed/harvest/600/400',
     imageHint: 'bountiful harvest',
@@ -69,6 +70,30 @@ const initialMockPosts: Omit<Post, 'id'>[] = [
     comments: [],
     timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 day ago
   },
+  {
+    authorId: 'mock-user-4',
+    authorName: 'Sanjay Kumar',
+    authorAvatar: 'https://picsum.photos/seed/avatar4/100',
+    authorAvatarFallback: 'SK',
+    text: "Has anyone tried intercropping with marigolds to deter pests? I'm thinking of planting them between my vegetable rows this season.",
+    likes: 21,
+    likedBy: [],
+    comments: [],
+    timestamp: Date.now() - 1000 * 60 * 60 * 8, // 8 hours ago
+  },
+  {
+    authorId: 'mock-user-5',
+    authorName: 'Anika Singh',
+    authorAvatar: 'https://picsum.photos/seed/avatar5/100',
+    authorAvatarFallback: 'AS',
+    text: "Warning to farmers in the northern region: I've spotted signs of Leaf Rust on my wheat crop. Be sure to check your fields!",
+    image: 'https://picsum.photos/seed/wheat-field/600/400',
+    imageHint: 'wheat field',
+    likes: 45,
+    likedBy: [],
+    comments: [],
+    timestamp: Date.now() - 1000 * 60 * 60 * 48, // 2 days ago
+  }
 ];
 
 
@@ -96,6 +121,7 @@ export function usePosts() {
     const unsubscribe = listenToPosts((allPosts) => {
         const processedPosts = allPosts.map(p => ({
             ...p,
+            comments: Array.isArray(p.comments) ? p.comments : [],
             isLiked: !!(user && p.likedBy && p.likedBy.includes(user.uid)),
         }));
         setPosts(processedPosts);
@@ -157,7 +183,7 @@ export function usePosts() {
         id: new Date().toISOString() + user.uid, // Unique ID for the comment
         authorId: user.uid,
         authorName: user.displayName || 'Anonymous Farmer',
-        authorAvatar: user.photoURL || `https://picsum.photos/seed/${user.uid}/100`,
+        authorAvatar: user.photoURL || `https://picsum.photos/seed/currentuser/100`,
         authorAvatarFallback: (user.displayName || 'A').charAt(0).toUpperCase(),
         text: commentText,
         timestamp: Date.now(),
