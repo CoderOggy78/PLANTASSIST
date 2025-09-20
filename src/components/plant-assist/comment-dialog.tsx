@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Post, Comment } from '@/hooks/use-posts';
 import { useAuth } from '@/hooks/use-auth';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -16,13 +16,14 @@ interface CommentDialogProps {
   post: Post | null;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onAddComment: (postId: string, commentText: string) => void;
+  onAddComment: (postId: string, commentText: string) => Promise<void>;
 }
 
 export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment }: CommentDialogProps) {
   const { user } = useAuth();
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   
   const handleAddComment = async () => {
     if (newComment.trim() && post) {
@@ -33,7 +34,22 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
     }
   };
 
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+        // A slight delay ensures the new comment is rendered before we scroll
+        setTimeout(() => {
+            scrollAreaRef.current?.scrollTo({
+                top: scrollAreaRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 100);
+    }
+  }, [post?.comments.length, isOpen]);
+
   if (!post) return null;
+  
+  // Ensure comments is an array
+  const comments = Array.isArray(post.comments) ? post.comments : [];
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -44,10 +60,10 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
             Replying to: "{post.text.substring(0, 50)}..."
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="flex-1 px-6">
+        <ScrollArea className="flex-1 px-6" ref={scrollAreaRef}>
           <div className="space-y-4">
-            {post.comments && post.comments.length > 0 ? (
-                post.comments
+            {comments.length > 0 ? (
+                comments
                 .sort((a,b) => a.timestamp - b.timestamp)
                 .map((comment: Comment) => (
                     <div key={comment.id} className="flex items-start gap-3">
@@ -86,6 +102,7 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+                    disabled={isSubmitting}
                 />
                 <Button onClick={handleAddComment} disabled={isSubmitting || !newComment.trim()}>
                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin"/> : <Send className="w-4 h-4"/>}

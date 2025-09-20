@@ -3,6 +3,16 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './use-auth';
+import {
+    listenToPosts,
+    addPostFirestore,
+    deletePostFirestore,
+    likePostFirestore,
+    addCommentFirestore,
+    getPostsCount,
+} from '@/lib/firebase/firestore';
+import { Unsubscribe } from 'firebase/firestore';
+
 
 export interface Comment {
     id: string;
@@ -24,16 +34,14 @@ export interface Post {
   image?: string;
   imageHint?: string;
   likes: number;
+  likedBy?: string[]; // Array of user IDs who liked the post
   comments: Comment[];
   timestamp: number;
-  isLiked?: boolean; // To track if the current user liked the post
+  isLiked?: boolean; // Client-side state
 }
 
-const POSTS_STORAGE_KEY = 'plantassist-posts';
-
-const initialMockPosts: Post[] = [
+const initialMockPosts: Omit<Post, 'id'>[] = [
   {
-    id: "mock-1",
     authorId: 'mock-user-1',
     authorName: 'John Doe',
     authorAvatar: 'https://picsum.photos/seed/avatar1/100',
@@ -42,13 +50,13 @@ const initialMockPosts: Post[] = [
     image: 'https://picsum.photos/seed/sick-plant/600/400',
     imageHint: 'sick plant',
     likes: 12,
+    likedBy: [],
     comments: [
         { id: 'comment-1-1', authorId: 'mock-user-2', authorName: 'Jane Smith', authorAvatar: 'https://picsum.photos/seed/avatar2/100', authorAvatarFallback: 'JS', text: 'It might be a nutrient deficiency. Have you checked your soil pH?', timestamp: Date.now() - 1000 * 60 * 30 },
     ],
     timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
   },
   {
-    id: "mock-2",
     authorId: 'mock-user-2',
     authorName: 'Jane Smith',
     authorAvatar: 'https://picsum.photos/seed/avatar2/100',
@@ -57,21 +65,9 @@ const initialMockPosts: Post[] = [
     image: 'https://picsum.photos/seed/harvest/600/400',
     imageHint: 'bountiful harvest',
     likes: 34,
+    likedBy: [],
     comments: [],
     timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 day ago
-  },
-  {
-    id: "mock-3",
-    authorId: 'mock-user-3',
-    authorName: 'Samuel Green',
-    authorAvatar: 'https://picsum.photos/seed/avatar3/100',
-    authorAvatarFallback: 'SG',
-    text: "Has anyone seen this kind of pest on their corn? They're small and black, and seem to be eating the silks. Not sure what to do.",
-    image: 'https://picsum.photos/seed/corn-field/600/400',
-    imageHint: 'corn field',
-    likes: 5,
-    comments: [],
-    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3, // 3 days ago
   },
 ];
 
@@ -80,55 +76,58 @@ export function usePosts() {
   const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-
+  
+  // One-time initialization for mock data
   useEffect(() => {
-    try {
-      const storedPosts = localStorage.getItem(POSTS_STORAGE_KEY);
-      if (storedPosts) {
-        setPosts(JSON.parse(storedPosts));
-      } else {
-        // If no posts in storage, initialize with mock posts
-        setPosts(initialMockPosts);
-        localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify(initialMockPosts));
-      }
-    } catch (error) {
-      console.error("Failed to load posts from localStorage", error);
-      setPosts(initialMockPosts);
+    const initializePosts = async () => {
+        const count = await getPostsCount();
+        if (count === 0) {
+            console.log("No posts found in Firestore, populating with mock data...");
+            for (const postData of initialMockPosts) {
+                await addPostFirestore(postData);
+            }
+        }
     }
-    setIsLoaded(true);
+    initializePosts();
   }, []);
 
-  const savePosts = (newPosts: Post[]) => {
-      setPosts(newPosts);
-      try {
-        localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify(newPosts));
-      } catch (error) {
-        console.error("Failed to save posts to localStorage", error);
-      }
-  }
+  useEffect(() => {
+    setIsLoaded(false);
+    const unsubscribe = listenToPosts((allPosts) => {
+        const processedPosts = allPosts.map(p => ({
+            ...p,
+            isLiked: !!(user && p.likedBy && p.likedBy.includes(user.uid)),
+        }));
+        setPosts(processedPosts);
+        setIsLoaded(true);
+    });
+    
+    // Cleanup listener on component unmount
+    return () => unsubscribe();
+  }, [user]);
 
-  const addPost = useCallback((text: string) => {
+
+  const addPost = useCallback(async (text: string) => {
     if (!user) {
         console.error("User must be logged in to post.");
         return;
     }
-    const newPost: Post = {
-        id: new Date().toISOString(),
+    const newPost: Omit<Post, 'id'> = {
         authorId: user.uid,
         authorName: user.displayName || 'Anonymous Farmer',
         authorAvatar: user.photoURL || `https://picsum.photos/seed/${user.uid}/100`,
         authorAvatarFallback: (user.displayName || 'A').charAt(0).toUpperCase(),
         text: text,
         likes: 0,
+        likedBy: [],
         comments: [],
         timestamp: Date.now(),
     };
     
-    const updatedPosts = [newPost, ...posts];
-    savePosts(updatedPosts);
-  }, [user, posts]);
+    await addPostFirestore(newPost);
+  }, [user]);
 
-  const deletePost = useCallback((postId: string) => {
+  const deletePost = useCallback(async (postId: string) => {
      if (!user) {
         console.error("User must be logged in to delete posts.");
         return;
@@ -138,27 +137,18 @@ export function usePosts() {
         console.error("User is not authorized to delete this post.");
         return;
     }
-    const updatedPosts = posts.filter(p => p.id !== postId);
-    savePosts(updatedPosts);
+    await deletePostFirestore(postId);
   }, [user, posts]);
 
-  const likePost = useCallback((postId: string) => {
-    const updatedPosts = posts.map(p => {
-        if (p.id === postId) {
-            // In a real app, you'd prevent multiple likes from the same user.
-            // For this demo, we'll just toggle the like.
-            if (p.isLiked) {
-                return { ...p, likes: p.likes - 1, isLiked: false };
-            } else {
-                return { ...p, likes: p.likes + 1, isLiked: true };
-            }
-        }
-        return p;
-    });
-    savePosts(updatedPosts);
-  }, [posts]);
+  const likePost = useCallback(async (postId: string) => {
+     if (!user) {
+        console.error("User must be logged in to like posts.");
+        return;
+    }
+    await likePostFirestore(postId, user.uid);
+  }, [user]);
 
-  const addComment = useCallback((postId: string, commentText: string) => {
+  const addComment = useCallback(async (postId: string, commentText: string) => {
     if (!user) {
         console.error("User must be logged in to comment.");
         return;
@@ -172,15 +162,9 @@ export function usePosts() {
         text: commentText,
         timestamp: Date.now(),
     };
-    const updatedPosts = posts.map(p => {
-        if (p.id === postId) {
-            const existingComments = Array.isArray(p.comments) ? p.comments : [];
-            return { ...p, comments: [...existingComments, newComment] };
-        }
-        return p;
-    });
-    savePosts(updatedPosts);
-  }, [user, posts]);
+    
+    await addCommentFirestore(postId, newComment);
+  }, [user]);
 
 
   return { posts, addPost, deletePost, likePost, addComment, isLoaded };

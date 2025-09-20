@@ -1,7 +1,7 @@
 
-'use server';
 import firebase_app from "@/lib/firebase/client-app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, doc, onSnapshot, addDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, getDoc, runTransaction, DocumentData } from "firebase/firestore";
+import type { Post, Comment } from "@/hooks/use-posts";
 
 // For this example, we'll define a type for our shop data and use mock data.
 // In a real application, this data would live in your Firestore database.
@@ -32,15 +32,72 @@ export async function getShops(diseaseName: string): Promise<Shop[]> {
     
     // In a real app, you might have a 'shops' collection and a 'products' subcollection.
     // You could query for shops that have a product for the given `diseaseName`.
-    // Example with actual Firestore:
-    /*
-    const db = getFirestore(firebase_app);
-    const shopsCol = collection(db, 'shops');
-    const shopSnapshot = await getDocs(shopsCol);
-    const shopList = shopSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Shop));
-    return shopList;
-    */
-
     // For now, we return mock data.
     return Promise.resolve(MOCK_SHOPS);
+}
+
+// =========================================================================
+// POSTS FUNCTIONS
+// =========================================================================
+
+const db = getFirestore(firebase_app);
+const postsCollection = collection(db, 'posts');
+
+export const listenToPosts = (callback: (posts: Post[]) => void) => {
+    return onSnapshot(postsCollection, (snapshot) => {
+        const posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
+        callback(posts);
+    });
+};
+
+export const addPostFirestore = async (postData: Omit<Post, 'id'>) => {
+    return await addDoc(postsCollection, postData);
+}
+
+export const deletePostFirestore = async (postId: string) => {
+    const postDoc = doc(db, 'posts', postId);
+    await deleteDoc(postDoc);
+}
+
+export const likePostFirestore = async (postId: string, userId: string) => {
+    const postRef = doc(db, 'posts', postId);
+    await runTransaction(db, async (transaction) => {
+        const postDoc = await transaction.get(postRef);
+        if (!postDoc.exists()) {
+            throw "Document does not exist!";
+        }
+        
+        const data = postDoc.data();
+        const likedBy = data.likedBy || [];
+        
+        if (likedBy.includes(userId)) {
+            // User has liked, so unlike
+            transaction.update(postRef, {
+                likes: (data.likes || 1) - 1,
+                likedBy: arrayRemove(userId)
+            });
+        } else {
+            // User has not liked, so like
+            transaction.update(postRef, {
+                likes: (data.likes || 0) + 1,
+                likedBy: arrayUnion(userId)
+            });
+        }
+    });
+}
+
+export const addCommentFirestore = async (postId: string, commentData: Comment) => {
+    const postRef = doc(db, 'posts', postId);
+    
+    // Ensure the commentData is a plain object for Firestore
+    const commentObject = { ...commentData };
+
+    await updateDoc(postRef, {
+        comments: arrayUnion(commentObject)
+    });
+};
+
+export const getPostsCount = async () => {
+    const snapshot = await getDocs(postsCollection);
+    return snapshot.size;
 }

@@ -14,16 +14,19 @@ import { cn } from '@/lib/utils';
 import CommentDialog from '@/components/plant-assist/comment-dialog';
 
 export default function CommunityPage() {
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
     const { posts, addPost, isLoaded, likePost, addComment } = usePosts();
     const [newPostText, setNewPostText] = useState('');
+    const [isPosting, setIsPosting] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
 
-    const handlePost = () => {
+    const handlePost = async () => {
         if (newPostText.trim()) {
-            addPost(newPostText);
+            setIsPosting(true);
+            await addPost(newPostText);
             setNewPostText('');
+            setIsPosting(false);
         }
     }
     
@@ -59,15 +62,16 @@ export default function CommunityPage() {
                         value={newPostText}
                         onChange={(e) => setNewPostText(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handlePost()}
+                        disabled={isPosting}
                     />
-                    <Button onClick={handlePost}>
-                        <Send className="mr-2"/> Post
+                    <Button onClick={handlePost} disabled={isPosting}>
+                        {isPosting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Send className="mr-2 h-4 w-4"/>} Post
                     </Button>
                 </div>
             </CardContent>
         </Card>
         
-        {!isLoaded ? (
+        {(!isLoaded || authLoading) ? (
             <div className="flex justify-center p-10">
                 <Loader2 className="w-8 h-8 animate-spin text-primary"/>
             </div>
@@ -102,7 +106,7 @@ export default function CommunityPage() {
                         <ThumbsUp className="w-5 h-5"/> {post.likes}
                     </Button>
                     <Button variant="ghost" size="sm" className="flex items-center gap-2 text-muted-foreground" onClick={() => handleCommentClick(post)}>
-                        <MessageCircle className="w-5 h-5"/> {post.comments.length} Comments
+                        <MessageCircle className="w-5 h-5"/> {post.comments?.length || 0} Comments
                     </Button>
                 </CardFooter>
              </Card>
