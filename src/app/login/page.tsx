@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { motion } from 'framer-motion';
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
@@ -98,7 +99,9 @@ export default function LoginPage() {
                                     <Input id="password" type="password" required value={password} onChange={e => setPassword(e.target.value)} />
                                 </div>
                                 <div className="text-sm">
-                                    <Link href="/forgot-password" passHref className="underline text-primary hover:text-primary/80">Forgot password?</Link>
+                                    <motion.div whileTap={{ scale: 0.95 }} className="inline-block">
+                                        <Link href="/forgot-password" passHref className="underline text-primary hover:text-primary/80">Forgot password?</Link>
+                                    </motion.div>
                                 </div>
                                 <Button type="submit" className="w-full font-semibold" disabled={loading}>
                                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -128,9 +131,11 @@ export default function LoginPage() {
 
                             <div className="mt-4 text-center text-sm">
                                 Don&apos;t have an account?{" "}
-                                <Link href="/signup" className="underline text-primary hover:text-primary/80">
-                                    Sign up
-                                </Link>
+                                <motion.div whileTap={{ scale: 0.95 }} className="inline-block">
+                                    <Link href="/signup" className="underline text-primary hover:text-primary/80">
+                                        Sign up
+                                    </Link>
+                                </motion.div>
                             </div>
                         </CardContent>
                     </Card>

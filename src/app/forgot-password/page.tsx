@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Sprout } from "lucide-react";
 import Image from "next/image";
+import { motion } from 'framer-motion';
 
 export default function ForgotPasswordPage() {
     return (
@@ -29,9 +30,11 @@ export default function ForgotPasswordPage() {
                                 <Button type="submit" className="w-full font-semibold">Send Reset Link</Button>
                                 <div className="mt-4 text-center text-sm">
                                     Remembered your password?{" "}
-                                    <Link href="/login" className="underline text-primary hover:text-primary/80">
-                                        Log in
-                                    </Link>
+                                    <motion.div whileTap={{ scale: 0.95 }} className="inline-block">
+                                        <Link href="/login" className="underline text-primary hover:text-primary/80">
+                                            Log in
+                                        </Link>
+                                    </motion.div>
                                 </div>
                             </form>
                         </CardContent>

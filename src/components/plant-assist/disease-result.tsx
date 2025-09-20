@@ -11,6 +11,7 @@ import { useHistory } from '@/hooks/use-history';
 import type { IdentifyPlantDiseaseFromImageOutput } from '@/ai/flows/identify-plant-disease-from-image';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 interface DiseaseResultProps {
   result: IdentifyPlantDiseaseFromImageOutput;
@@ -88,11 +89,13 @@ export default function DiseaseResult({ result, imagePreview }: DiseaseResultPro
         <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
             <h3 className="text-lg font-semibold flex items-center gap-2"><Store className="text-primary"/>Find Remedies Nearby</h3>
             <p className="text-muted-foreground text-sm">Find local agri-shops that sell the recommended products to treat this disease.</p>
-            <Button asChild className="w-full sm:w-auto">
-              <Link href={`/shops/${encodeURIComponent(result.diseaseName)}`}>
-                Find Agri-Shops Nearby
-              </Link>
-            </Button>
+            <motion.div whileTap={{ scale: 0.95 }}>
+                <Button asChild className="w-full sm:w-auto">
+                <Link href={`/shops/${encodeURIComponent(result.diseaseName)}`}>
+                    Find Agri-Shops Nearby
+                </Link>
+                </Button>
+            </motion.div>
         </div>
       </CardContent>
     </Card>

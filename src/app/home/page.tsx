@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, ScanLine, BookOpen, MessageSquare, Users } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from 'framer-motion';
 
 export default function HomePage() {
   return (
@@ -33,9 +34,11 @@ export default function HomePage() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-muted-foreground mb-4">Upload a photo for an instant health diagnosis.</p>
-                        <Button asChild className="font-semibold">
-                        <Link href="/">Upload Image <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                        </Button>
+                        <motion.div whileTap={{ scale: 0.95 }}>
+                            <Button asChild className="font-semibold">
+                            <Link href="/">Upload Image <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </motion.div>
                     </CardContent>
                 </Card>
                  <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
@@ -47,9 +50,11 @@ export default function HomePage() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-muted-foreground mb-4">Ask our AI Plant Doctor any question.</p>
-                        <Button asChild className="font-semibold">
-                        <Link href="/chat">Start Chat <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                        </Button>
+                        <motion.div whileTap={{ scale: 0.95 }}>
+                            <Button asChild className="font-semibold">
+                            <Link href="/chat">Start Chat <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </motion.div>
                     </CardContent>
                 </Card>
                 <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
@@ -61,9 +66,11 @@ export default function HomePage() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-muted-foreground mb-4">Browse common diseases and their remedies.</p>
-                        <Button asChild className="font-semibold">
-                        <Link href="/knowledge-base">Explore <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                        </Button>
+                         <motion.div whileTap={{ scale: 0.95 }}>
+                            <Button asChild className="font-semibold">
+                            <Link href="/knowledge-base">Explore <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </motion.div>
                     </CardContent>
                 </Card>
                 <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
@@ -75,9 +82,11 @@ export default function HomePage() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-muted-foreground mb-4">Connect with other farmers and share tips.</p>
-                        <Button asChild className="font-semibold">
-                        <Link href="/community">Join Forum <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                        </Button>
+                        <motion.div whileTap={{ scale: 0.95 }}>
+                            <Button asChild className="font-semibold">
+                            <Link href="/community">Join Forum <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </motion.div>
                     </CardContent>
                 </Card>
             </div>

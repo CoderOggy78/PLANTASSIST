@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Landmark, ArrowRight, Filter } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
 
 const mockSchemes = [
   {
@@ -119,11 +120,13 @@ export default function SchemesPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button asChild>
-                  <a href="#" target="_blank" rel="noopener noreferrer">
-                    Learn More & Apply <ArrowRight className="ml-2 w-4 h-4"/>
-                  </a>
-                </Button>
+                 <motion.div whileTap={{ scale: 0.95 }}>
+                    <Button asChild>
+                    <a href="#" target="_blank" rel="noopener noreferrer">
+                        Learn More & Apply <ArrowRight className="ml-2 w-4 h-4"/>
+                    </a>
+                    </Button>
+                </motion.div>
               </CardFooter>
             </Card>
           ))

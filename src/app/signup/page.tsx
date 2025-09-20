@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
+import { motion } from 'framer-motion';
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
@@ -135,9 +136,11 @@ export default function SignupPage() {
 
                             <div className="mt-4 text-center text-sm">
                                 Already have an account?{" "}
-                                <Link href="/login" className="underline text-primary hover:text-primary/80">
-                                    Log in
-                                </Link>
+                                 <motion.div whileTap={{ scale: 0.95 }} className="inline-block">
+                                    <Link href="/login" className="underline text-primary hover:text-primary/80">
+                                        Log in
+                                    </Link>
+                                </motion.div>
                             </div>
                         </CardContent>
                     </Card>
