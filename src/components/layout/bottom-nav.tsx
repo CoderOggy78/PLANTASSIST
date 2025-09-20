@@ -5,17 +5,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, LineChart, UserCircle2, ScanLine, MessageSquare, Feather, Users, CalendarDays, FlaskConical, Notebook, AreaChart, Landmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLocalization } from '@/hooks/use-localization';
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t } = useLocalization();
   const itemsToUse = [
-    { href: '/home', label: 'Home', icon: Home },
-    { href: '/alerts', label: 'Alerts', icon: Feather },
-    { href: '/progress', label: 'Progress', icon: LineChart },
+    { href: '/home', label: t('navHome'), icon: Home },
+    { href: '/alerts', label: t('navAlerts'), icon: Feather },
+    { href: '/progress', label: t('navProgress'), icon: LineChart },
     { href: 'BLANK' }, // Placeholder for the FAB
-    { href: '/calendar', label: 'Calendar', icon: CalendarDays },
-    { href: '/community', label: 'Community', icon: Users },
-    { href: '/profile', label: 'Profile', icon: UserCircle2 },
+    { href: '/calendar', label: t('navCalendar'), icon: CalendarDays },
+    { href: '/community', label: t('navCommunity'), icon: Users },
+    { href: '/profile', label: t('navProfile'), icon: UserCircle2 },
   ]
 
 
@@ -58,31 +60,31 @@ export default function BottomNav() {
             <Link href="/soil-health" className="flex-1">
                 <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/soil-health' && 'text-primary scale-105')}>
                     <FlaskConical className="w-5 h-5"/>
-                    <span className="text-[10px] font-medium">Soil</span>
+                    <span className="text-[10px] font-medium">{t('navSoil')}</span>
                 </div>
             </Link>
              <Link href="/diary" className="flex-1">
                 <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/diary' && 'text-primary scale-105')}>
                     <Notebook className="w-5 h-5"/>
-                    <span className="text-[10px] font-medium">Diary</span>
+                    <span className="text-[10px] font-medium">{t('navDiary')}</span>
                 </div>
             </Link>
             <Link href="/yield-prediction" className="flex-1">
                 <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/yield-prediction' && 'text-primary scale-105')}>
                     <AreaChart className="w-5 h-5"/>
-                    <span className="text-[10px] font-medium">Yield</span>
+                    <span className="text-[10px] font-medium">{t('navYield')}</span>
                 </div>
             </Link>
             <Link href="/schemes" className="flex-1">
                 <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/schemes' && 'text-primary scale-105')}>
                     <Landmark className="w-5 h-5"/>
-                    <span className="text-[10px] font-medium">Schemes</span>
+                    <span className="text-[10px] font-medium">{t('navSchemes')}</span>
                 </div>
             </Link>
             <Link href="/chat" className="flex-1">
                  <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/chat' && 'text-primary scale-105')}>
                     <MessageSquare className="w-5 h-5"/>
-                    <span className="text-[10px] font-medium">Chat</span>
+                    <span className="text-[10px] font-medium">{t('navChat')}</span>
                 </div>
             </Link>
         </div>

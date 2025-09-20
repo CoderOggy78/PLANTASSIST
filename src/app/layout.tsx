@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import AppLayout from '@/components/layout/app-layout';
 import { AuthProvider } from '@/hooks/use-auth';
+import { LocalizationProvider } from '@/hooks/use-localization';
 
 export const metadata: Metadata = {
   title: 'PlantAssist',
@@ -25,10 +26,12 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <ThemeProvider storageKey="plantassist-theme">
-          <AuthProvider>
-            <AppLayout>{children}</AppLayout>
-            <Toaster />
-          </AuthProvider>
+          <LocalizationProvider>
+            <AuthProvider>
+              <AppLayout>{children}</AppLayout>
+              <Toaster />
+            </AuthProvider>
+          </LocalizationProvider>
         </ThemeProvider>
       </body>
     </html>

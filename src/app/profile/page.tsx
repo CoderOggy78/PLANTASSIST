@@ -10,10 +10,12 @@ import ThemeSwitcher from "@/components/plant-assist/theme-switcher";
 import { useAuth } from "@/hooks/use-auth";
 import { LogOut, User as UserIcon, Languages } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useLocalization } from "@/hooks/use-localization";
 
 export default function ProfilePage() {
   const { user, signOut, loading } = useAuth();
   const router = useRouter();
+  const { language, setLanguage, t } = useLocalization();
 
   if (loading) {
     return <div>Loading...</div>; // Or a skeleton loader
@@ -34,24 +36,24 @@ export default function ProfilePage() {
           </AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-3xl font-bold font-headline">{user.displayName || 'User Profile'}</h1>
+          <h1 className="text-3xl font-bold font-headline">{user.displayName || t('userProfile')}</h1>
           <p className="text-muted-foreground">{user.email}</p>
         </div>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle>Settings</CardTitle>
-          <CardDescription>Manage your app preferences.</CardDescription>
+          <CardTitle>{t('settings')}</CardTitle>
+          <CardDescription>{t('managePreferences')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="font-medium">App Theme</span>
+            <span className="font-medium">{t('appTheme')}</span>
             <ThemeSwitcher />
           </div>
           <div className="flex items-center justify-between">
-            <span className="font-medium flex items-center gap-2"><Languages className="w-5 h-5 text-primary"/>App Language</span>
-            <Select defaultValue="en">
+            <span className="font-medium flex items-center gap-2"><Languages className="w-5 h-5 text-primary"/>{t('appLanguage')}</span>
+            <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'hi' | 'mr' | 'gu')}>
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select Language" />
                 </SelectTrigger>
@@ -67,14 +69,14 @@ export default function ProfilePage() {
       </Card>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold font-headline">Identification History</h2>
+        <h2 className="text-2xl font-bold font-headline">{t('identificationHistory')}</h2>
         <HistoryList />
       </div>
 
       <div className="pt-4">
         <Button variant="outline" className="w-full" onClick={signOut}>
           <LogOut className="mr-2 h-4 w-4" />
-          Log Out
+          {t('logOut')}
         </Button>
       </div>
     </div>
