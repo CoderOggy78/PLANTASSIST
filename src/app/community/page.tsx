@@ -1,49 +1,30 @@
 
+'use client';
+
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Users, Send, ThumbsUp, MessageCircle } from 'lucide-react';
+import { Users, Send, ThumbsUp, MessageCircle, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-
-const mockPosts = [
-  {
-    id: 1,
-    author: 'John Doe',
-    avatar: 'https://picsum.photos/seed/avatar1/100',
-    avatarFallback: 'JD',
-    text: "My tomato plants are getting these weird yellow spots on the leaves. I've tried neem oil but it doesn't seem to be working. Any suggestions?",
-    image: 'https://picsum.photos/seed/yellow-leaf/600/400',
-    imageHint: 'yellow spots',
-    likes: 12,
-    comments: 4,
-  },
-  {
-    id: 2,
-    author: 'Jane Smith',
-    avatar: 'https://picsum.photos/seed/avatar2/100',
-    avatarFallback: 'JS',
-    text: "Just wanted to share my success with using a baking soda spray for powdery mildew on my zucchini! Here's a before and after. So happy with the results!",
-    image: 'https://picsum.photos/seed/healthy-zucchini/600/400',
-    imageHint: 'healthy plant',
-    likes: 34,
-    comments: 9,
-  },
-  {
-    id: 3,
-    author: 'Samuel Green',
-    avatar: 'https://picsum.photos/seed/avatar3/100',
-    avatarFallback: 'SG',
-    text: "Has anyone seen this kind of pest on their corn? They're small and black, and seem to be eating the silks. Not sure what to do.",
-    image: 'https://picsum.photos/seed/corn-pest/600/400',
-    imageHint: 'corn pest',
-    likes: 5,
-    comments: 2,
-  },
-];
-
+import { usePosts } from '@/hooks/use-posts';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function CommunityPage() {
+    const { user } = useAuth();
+    const { posts, addPost, isLoaded } = usePosts();
+    const [newPostText, setNewPostText] = useState('');
+
+    const handlePost = () => {
+        if (newPostText.trim()) {
+            addPost(newPostText);
+            setNewPostText('');
+        }
+    }
+
+    const sortedPosts = posts.sort((a, b) => b.timestamp - a.timestamp);
+
   return (
     <div className="container mx-auto max-w-3xl py-4">
        <header className="text-center mb-6">
@@ -59,30 +40,41 @@ export default function CommunityPage() {
             <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                     <Avatar>
-                        <AvatarImage src="https://picsum.photos/seed/mainuser/100" data-ai-hint="person avatar"/>
-                        <AvatarFallback>U</AvatarFallback>
+                        <AvatarImage src={user?.photoURL || "https://picsum.photos/seed/mainuser/100"} data-ai-hint="person avatar"/>
+                        <AvatarFallback>{user?.displayName?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
                     </Avatar>
-                    <Input placeholder="What's on your mind?" className="flex-1" />
-                    <Button>
+                    <Input 
+                        placeholder="What's on your mind?" 
+                        className="flex-1" 
+                        value={newPostText}
+                        onChange={(e) => setNewPostText(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handlePost()}
+                    />
+                    <Button onClick={handlePost}>
                         <Send className="mr-2"/> Post
                     </Button>
                 </div>
             </CardContent>
         </Card>
-
-        {mockPosts.map((post) => (
+        
+        {!isLoaded ? (
+            <div className="flex justify-center p-10">
+                <Loader2 className="w-8 h-8 animate-spin text-primary"/>
+            </div>
+        ) : sortedPosts.length > 0 ? (
+            sortedPosts.map((post) => (
              <Card key={post.id} className="hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 <CardHeader>
                     <div className="flex items-center gap-3">
                         <Avatar>
-                            <AvatarImage src={post.avatar} data-ai-hint="person avatar"/>
-                            <AvatarFallback>{post.avatarFallback}</AvatarFallback>
+                            <AvatarImage src={post.authorAvatar} data-ai-hint="person avatar"/>
+                            <AvatarFallback>{post.authorAvatarFallback}</AvatarFallback>
                         </Avatar>
-                        <CardTitle className="text-lg font-semibold">{post.author}</CardTitle>
+                        <CardTitle className="text-lg font-semibold">{post.authorName}</CardTitle>
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p className="text-muted-foreground">{post.text}</p>
+                    <p className="text-muted-foreground whitespace-pre-wrap">{post.text}</p>
                     {post.image && (
                         <div className="relative aspect-video rounded-lg overflow-hidden border">
                             <Image 
@@ -104,8 +96,14 @@ export default function CommunityPage() {
                     </Button>
                 </CardFooter>
              </Card>
-        ))}
-
+            ))
+        ) : (
+             <Card>
+                <CardContent className="p-10 text-center">
+                    <p className="text-muted-foreground">No posts yet. Be the first to share something!</p>
+                </CardContent>
+             </Card>
+        )}
       </div>
     </div>
   );

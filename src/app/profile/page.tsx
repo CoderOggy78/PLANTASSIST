@@ -3,17 +3,30 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import HistoryList from "@/components/plant-assist/history-list";
 import ThemeSwitcher from "@/components/plant-assist/theme-switcher";
 import { useAuth } from "@/hooks/use-auth";
-import { LogOut, User as UserIcon, Languages } from "lucide-react";
+import { usePosts } from "@/hooks/use-posts";
+import { LogOut, User as UserIcon, Languages, Trash2, MessageSquare } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocalization } from "@/hooks/use-localization";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function ProfilePage() {
   const { user, signOut, loading } = useAuth();
+  const { posts, deletePost, isLoaded: postsLoaded } = usePosts();
   const router = useRouter();
   const { language, setLanguage, t } = useLocalization();
 
@@ -25,6 +38,8 @@ export default function ProfilePage() {
     router.push("/login");
     return null;
   }
+  
+  const userPosts = posts.filter(post => post.authorId === user.uid).sort((a, b) => b.timestamp - a.timestamp);
 
   return (
     <div className="container mx-auto max-w-3xl py-4 space-y-8">
@@ -67,6 +82,52 @@ export default function ProfilePage() {
           </div>
         </CardContent>
       </Card>
+      
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold font-headline">My Posts</h2>
+        {userPosts.length > 0 ? (
+          <div className="space-y-4">
+            {userPosts.map(post => (
+              <Card key={post.id}>
+                <CardContent className="p-4">
+                  <p className="text-muted-foreground">{post.text}</p>
+                </CardContent>
+                <CardFooter className="flex justify-between items-center bg-muted/50 p-3">
+                   <p className="text-xs text-muted-foreground">
+                        Posted on {new Date(post.timestamp).toLocaleDateString()}
+                    </p>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                         <Button variant="destructive" size="sm">
+                            <Trash2 className="w-4 h-4 mr-2"/> Delete
+                         </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will permanently delete your post. This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => deletePost(post.id)}>Delete</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="p-8 text-center">
+                <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground/50"/>
+                <p className="mt-4 text-muted-foreground">You haven't posted anything yet.</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       <div className="space-y-4">
         <h2 className="text-2xl font-bold font-headline">{t('identificationHistory')}</h2>
