@@ -80,7 +80,9 @@ const identifyPlantDiseaseFromImageFlow = ai.defineFlow(
     outputSchema: IdentifyPlantDiseaseFromImageOutputSchema,
   },
   async input => {
-    const {output: diagnosis} = await prompt(input);
+    const {output} = await prompt(input);
+    const diagnosis = output!;
+    
     if (!diagnosis) {
         throw new Error("Failed to get a diagnosis from the AI.");
     }
