@@ -63,7 +63,7 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     if (!result) {
         return {
             status: 'error',
-            message: 'Failed to get a result from the AI.',
+            message: 'Failed to get a result from the AI. The response was empty.',
             data: null,
         }
     }
@@ -76,9 +76,10 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     };
   } catch (error) {
     console.error(error);
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
     return {
       status: 'error',
-      message: 'An unexpected error occurred. Please try again.',
+      message: errorMessage,
       data: null,
     };
   }
