@@ -1,3 +1,25 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    { "id": "Powdery Mildew", "description": "A plant leaf covered in white powdery mildew.", "imageUrl": "https://picsum.photos/seed/mildew/400/300", "imageHint": "powdery mildew" },
+    { "id": "Leaf Rust", "description": "A plant leaf showing orange rust pustules.", "imageUrl": "https://picsum.photos/seed/leafrust/400/300", "imageHint": "leaf rust" },
+    { "id": "Bacterial Blight", "description": "A leaf with water-soaked lesions from bacterial blight.", "imageUrl": "https://picsum.photos/seed/blight/400/300", "imageHint": "bacterial blight" },
+    { "id": "Downy Mildew", "description": "A leaf with yellow patches and gray fuzz from downy mildew.", "imageUrl": "https://picsum.photos/seed/downymildew/400/300", "imageHint": "downy mildew" },
+    { "id": "Late Blight", "description": "A tomato with dark lesions from late blight.", "imageUrl": "https://picsum.photos/seed/lateblight/400/300", "imageHint": "late blight" },
+    { "id": "Anthracnose", "description": "A leaf with dark, sunken spots from anthracnose.", "imageUrl": "https://picsum.photos/seed/anthracnose/400/300", "imageHint": "anthracnose" },
+    { "id": "Citrus Canker", "description": "A citrus fruit with brown corky lesions from citrus canker.", "imageUrl": "https://picsum.photos/seed/canker/400/300", "imageHint": "citrus canker" },
+    { "id": "Root Rot", "description": "A plant with brown and mushy roots from root rot.", "imageUrl": "https://picsum.photos/seed/rootrot/400/300", "imageHint": "root rot" },
+    { "id": "Fusarium Wilt", "description": "A plant showing signs of yellowing and stunting from fusarium wilt.", "imageUrl": "https://picsum.photos/seed/wilt/400/300", "imageHint": "fusarium wilt" },
+    { "id": "Black Spot", "description": "A rose leaf with circular black spots.", "imageUrl": "https://picsum.photos/seed/blackspot/400/300", "imageHint": "black spot" },
+    { "id": "Mosaic Virus", "description": "A leaf with a mottled yellow and green pattern from mosaic virus.", "imageUrl": "https://picsum.photos/seed/mosaic/400/300", "imageHint": "mosaic virus" },
+    { "id": "Stem Rot", "description": "The base of a plant stem with dark lesions from stem rot.", "imageUrl": "https://picsum.photos/seed/stemrot/400/300", "imageHint": "stem rot" },
+    { "id": "White Rust", "description": "The underside of a leaf with white blisters from white rust.", "imageUrl": "https://picsum.photos/seed/whiterust/400/300", "imageHint": "white rust" },
+    { "id": "Charcoal Rot", "description": "A plant stem with gray-black lesions from charcoal rot.", "imageUrl": "https://picsum.photos/seed/charcoalrot/400/300", "imageHint": "charcoal rot" },
+    { "id": "Wilt Disease", "description": "A plant that is suddenly wilting.", "imageUrl": "https://picsum.photos/seed/wiltdisease/400/300", "imageHint": "wilt disease" },
+    { "id": "Smut Disease", "description": "A corn cob with black fungal growth from smut disease.", "imageUrl": "https://picsum.photos/seed/smut/400/300", "imageHint": "smut disease" },
+    { "id": "Leaf Curl Virus", "description": "A leaf that is curled and yellowed from leaf curl virus.", "imageUrl": "https://picsum.photos/seed/leafcurl/400/300", "imageHint": "leaf curl" },
+    { "id": "Blossom End Rot", "description": "A tomato with a black spot on its bottom from blossom end rot.", "imageUrl": "https://picsum.photos/seed/blossomrot/400/300", "imageHint": "blossom rot" },
+    { "id": "Clubroot", "description": "A plant with swollen, club-like roots.", "imageUrl": "https://picsum.photos/seed/clubroot/400/300", "imageHint": "clubroot" },
+    { "id": "Gray Mold (Botrytis)", "description": "A strawberry with fuzzy gray mold.", "imageUrl": "https://picsum.photos/seed/graymold/400/300", "imageHint": "gray mold" },
+    { "id": "user-avatar", "description": "A placeholder avatar for a user profile.", "imageUrl": "https://picsum.photos/seed/user/200", "imageHint": "person avatar" }
+  ]
 }
