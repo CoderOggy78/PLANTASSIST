@@ -30,7 +30,7 @@ export default function ThemeSwitcher() {
     <div className="relative flex items-center gap-2 p-1 bg-muted rounded-full">
         <motion.div
             layoutId="theme-switcher-highlight"
-            className="absolute h-[calc(100%-8px)] w-[calc(50%-4px)] bg-background rounded-md shadow-sm"
+            className="absolute h-[calc(100%-8px)] w-[calc(50%-4px)] bg-background rounded-md shadow-lg shadow-primary/50"
             style={{
                 left: selectedTheme === 'light' ? '4px' : 'calc(50% + 2px)',
             }}
