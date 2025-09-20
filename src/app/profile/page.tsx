@@ -1,21 +1,40 @@
+
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import HistoryList from "@/components/plant-assist/history-list";
 import ThemeSwitcher from "@/components/plant-assist/theme-switcher";
-import { LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { LogOut, User as UserIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
+  const { user, signOut, loading } = useAuth();
+  const router = useRouter();
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a skeleton loader
+  }
+
+  if (!user) {
+    router.push("/login");
+    return null;
+  }
+
   return (
     <div className="container mx-auto max-w-3xl py-4 space-y-8">
       <header className="flex items-center gap-4">
         <Avatar className="h-20 w-20">
-          <AvatarImage src="https://picsum.photos/seed/user/200" alt="User" data-ai-hint="person avatar" />
-          <AvatarFallback>U</AvatarFallback>
+          <AvatarImage src={user.photoURL || "https://picsum.photos/seed/user/200"} alt={user.displayName || "User"} data-ai-hint="person avatar" />
+          <AvatarFallback>
+            {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserIcon />}
+          </AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-3xl font-bold font-headline">User Profile</h1>
-          <p className="text-muted-foreground">farmer@plantassist.com</p>
+          <h1 className="text-3xl font-bold font-headline">{user.displayName || 'User Profile'}</h1>
+          <p className="text-muted-foreground">{user.email}</p>
         </div>
       </header>
 
@@ -38,10 +57,10 @@ export default function ProfilePage() {
       </div>
 
       <div className="pt-4">
-          <Button variant="outline" className="w-full">
-              <LogOut className="mr-2 h-4 w-4" />
-              Log Out
-          </Button>
+        <Button variant="outline" className="w-full" onClick={signOut}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Log Out
+        </Button>
       </div>
     </div>
   );

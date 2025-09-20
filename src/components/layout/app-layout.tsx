@@ -1,13 +1,45 @@
+
 "use client";
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import BottomNav from './bottom-nav';
+import { useAuth } from '@/hooks/use-auth';
+import { useEffect } from 'react';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const noNavRoutes = ['/login', '/signup'];
+  const router = useRouter();
+  const { user, loading } = useAuth();
+  
+  const noNavRoutes = ['/login', '/signup', '/forgot-password', '/onboarding'];
+  const authRoutes = ['/login', '/signup', '/forgot-password'];
 
-  const showNav = !noNavRoutes.includes(pathname);
+  useEffect(() => {
+    if (!loading && !user && !authRoutes.includes(pathname) && pathname !== '/onboarding') {
+      router.push('/login');
+    }
+  }, [user, loading, pathname, router, authRoutes]);
+
+
+  const showNav = !noNavRoutes.includes(pathname) && !!user;
+
+  if (loading && !user) {
+    // You can return a global loading spinner here
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+          <div className="text-primary">Loading...</div>
+      </div>
+    );
+  }
+  
+  if (!user && !authRoutes.includes(pathname) && pathname !== '/onboarding') {
+    return null; // or a redirect component
+  }
+  
+  if (user && authRoutes.includes(pathname)) {
+    router.push('/home');
+    return null;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
