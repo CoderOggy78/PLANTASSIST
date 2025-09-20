@@ -9,8 +9,9 @@ import Link from "next/link";
 import { Sprout, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Image from "next/image";
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
@@ -26,7 +27,6 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 export default function SignupPage() {
     const { signUpWithEmail, signInWithGoogle, user } = useAuth();
     const router = useRouter();
-    const pathname = usePathname();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -76,69 +76,83 @@ export default function SignupPage() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen p-4 bg-background">
-            <Card className="w-full max-w-sm shadow-xl">
-                <CardHeader className="text-center">
-                    <Link href="/" className="flex justify-center mb-4">
-                        <Sprout className="w-14 h-14 text-primary" />
-                    </Link>
-                    <CardTitle className="text-3xl font-headline">Create an Account</CardTitle>
-                    <CardDescription className="text-md">Join PlantAssist to save your plants</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {error && (
-                        <Alert variant="destructive" className="mb-4">
-                            <AlertTitle>Signup Failed</AlertTitle>
-                            <AlertDescription>{error}</AlertDescription>
-                        </Alert>
-                    )}
-                    <form onSubmit={handleSignup} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" placeholder="you@example.com" required value={email} onChange={e => setEmail(e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" required value={password} onChange={e => setPassword(e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="confirm-password">Confirm Password</Label>
-                            <Input id="confirm-password" type="password" required value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-                        </div>
-                        <Button type="submit" className="w-full font-semibold" disabled={loading}>
-                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Sign Up
-                        </Button>
-                    </form>
+        <div className="w-full min-h-screen lg:grid lg:grid-cols-2">
+            <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                 <div className="mx-auto grid w-[350px] gap-6">
+                    <Card className="w-full max-w-sm shadow-xl border-none sm:border">
+                        <CardHeader className="text-center">
+                            <Link href="/" className="flex justify-center mb-4">
+                                <Sprout className="w-14 h-14 text-primary" />
+                            </Link>
+                            <CardTitle className="text-3xl font-headline">Create an Account</CardTitle>
+                            <CardDescription className="text-md">Join PlantAssist to save your plants</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {error && (
+                                <Alert variant="destructive" className="mb-4">
+                                    <AlertTitle>Signup Failed</AlertTitle>
+                                    <AlertDescription>{error}</AlertDescription>
+                                </Alert>
+                            )}
+                            <form onSubmit={handleSignup} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input id="email" type="email" placeholder="you@example.com" required value={email} onChange={e => setEmail(e.target.value)} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="password">Password</Label>
+                                    <Input id="password" type="password" required value={password} onChange={e => setPassword(e.target.value)} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="confirm-password">Confirm Password</Label>
+                                    <Input id="confirm-password" type="password" required value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                                </div>
+                                <Button type="submit" className="w-full font-semibold" disabled={loading}>
+                                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Sign Up
+                                </Button>
+                            </form>
 
-                    <div className="relative my-4">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-card px-2 text-muted-foreground">
-                                Or continue with
-                            </span>
-                        </div>
-                    </div>
+                            <div className="relative my-4">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-card px-2 text-muted-foreground">
+                                        Or continue with
+                                    </span>
+                                </div>
+                            </div>
 
-                    <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleSignIn} disabled={googleLoading}>
-                        {googleLoading ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                            <GoogleIcon className="mr-2" />
-                        )}
-                        Google
-                    </Button>
+                            <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleSignIn} disabled={googleLoading}>
+                                {googleLoading ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <GoogleIcon className="mr-2" />
+                                )}
+                                Google
+                            </Button>
 
-                    <div className="mt-4 text-center text-sm">
-                        Already have an account?{" "}
-                        <Link href="/login" className="underline text-primary hover:text-primary/80">
-                            Log in
-                        </Link>
-                    </div>
-                </CardContent>
-            </Card>
+                            <div className="mt-4 text-center text-sm">
+                                Already have an account?{" "}
+                                <Link href="/login" className="underline text-primary hover:text-primary/80">
+                                    Log in
+                                </Link>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+             <div className="hidden bg-muted lg:block relative">
+                <Image
+                    src="https://picsum.photos/seed/sunny-forest/1200/1800"
+                    alt="Sunlight filtering through forest trees"
+                    fill
+                    className="object-cover"
+                    data-ai-hint="sunlit forest"
+                />
+                 <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-70"></div>
+            </div>
         </div>
     );
 }

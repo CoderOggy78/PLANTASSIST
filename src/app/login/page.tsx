@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
@@ -69,68 +70,82 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen p-4 bg-background">
-            <Card className="w-full max-w-sm shadow-xl">
-                <CardHeader className="text-center">
-                    <Link href="/" className="flex justify-center mb-4">
-                        <Sprout className="w-14 h-14 text-primary" />
-                    </Link>
-                    <CardTitle className="text-3xl font-headline">Welcome Back</CardTitle>
-                    <CardDescription className="text-md">Log in to your PlantAssist account</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {error && (
-                        <Alert variant="destructive" className="mb-4">
-                            <AlertTitle>Login Failed</AlertTitle>
-                            <AlertDescription>{error}</AlertDescription>
-                        </Alert>
-                    )}
-                    <form onSubmit={handleLogin} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" placeholder="you@example.com" required value={email} onChange={e => setEmail(e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" required value={password} onChange={e => setPassword(e.target.value)} />
-                        </div>
-                        <div className="text-sm">
-                            <Link href="/forgot-password" passHref className="underline text-primary hover:text-primary/80">Forgot password?</Link>
-                        </div>
-                        <Button type="submit" className="w-full font-semibold" disabled={loading}>
-                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Log In
-                        </Button>
-                    </form>
+        <div className="w-full min-h-screen lg:grid lg:grid-cols-2">
+             <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto grid w-[350px] gap-6">
+                    <Card className="w-full max-w-sm shadow-xl border-none sm:border">
+                        <CardHeader className="text-center">
+                            <Link href="/" className="flex justify-center mb-4">
+                                <Sprout className="w-14 h-14 text-primary" />
+                            </Link>
+                            <CardTitle className="text-3xl font-headline">Welcome Back</CardTitle>
+                            <CardDescription className="text-md">Log in to your PlantAssist account</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {error && (
+                                <Alert variant="destructive" className="mb-4">
+                                    <AlertTitle>Login Failed</AlertTitle>
+                                    <AlertDescription>{error}</AlertDescription>
+                                </Alert>
+                            )}
+                            <form onSubmit={handleLogin} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input id="email" type="email" placeholder="you@example.com" required value={email} onChange={e => setEmail(e.target.value)} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="password">Password</Label>
+                                    <Input id="password" type="password" required value={password} onChange={e => setPassword(e.target.value)} />
+                                </div>
+                                <div className="text-sm">
+                                    <Link href="/forgot-password" passHref className="underline text-primary hover:text-primary/80">Forgot password?</Link>
+                                </div>
+                                <Button type="submit" className="w-full font-semibold" disabled={loading}>
+                                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Log In
+                                </Button>
+                            </form>
 
-                    <div className="relative my-4">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-card px-2 text-muted-foreground">
-                                Or continue with
-                            </span>
-                        </div>
-                    </div>
+                            <div className="relative my-4">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-card px-2 text-muted-foreground">
+                                        Or continue with
+                                    </span>
+                                </div>
+                            </div>
 
-                    <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleSignIn} disabled={googleLoading}>
-                        {googleLoading ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                            <GoogleIcon className="mr-2" />
-                        )}
-                        Google
-                    </Button>
+                            <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleSignIn} disabled={googleLoading}>
+                                {googleLoading ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <GoogleIcon className="mr-2" />
+                                )}
+                                Google
+                            </Button>
 
-                    <div className="mt-4 text-center text-sm">
-                        Don&apos;t have an account?{" "}
-                        <Link href="/signup" className="underline text-primary hover:text-primary/80">
-                            Sign up
-                        </Link>
-                    </div>
-                </CardContent>
-            </Card>
+                            <div className="mt-4 text-center text-sm">
+                                Don&apos;t have an account?{" "}
+                                <Link href="/signup" className="underline text-primary hover:text-primary/80">
+                                    Sign up
+                                </Link>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+            <div className="hidden bg-muted lg:block relative">
+                <Image
+                    src="https://picsum.photos/seed/green-leaves/1200/1800"
+                    alt="Background image of lush green leaves"
+                    fill
+                    className="object-cover"
+                    data-ai-hint="green leaves"
+                />
+                 <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-70"></div>
+            </div>
         </div>
     );
 }
