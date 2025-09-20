@@ -24,10 +24,10 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (newComment.trim() && post) {
       setIsSubmitting(true);
-      onAddComment(post.id, newComment);
+      await onAddComment(post.id, newComment);
       setNewComment('');
       setIsSubmitting(false);
     }
@@ -46,7 +46,7 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
         </DialogHeader>
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-4">
-            {post.comments.length > 0 ? (
+            {post.comments && post.comments.length > 0 ? (
                 post.comments
                 .sort((a,b) => a.timestamp - b.timestamp)
                 .map((comment: Comment) => (
