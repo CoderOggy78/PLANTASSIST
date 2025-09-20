@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Home, LineChart, UserCircle2, ScanLine, Feather, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocalization } from '@/hooks/use-localization';
+import { motion } from 'framer-motion';
 
 export default function BottomNav() {
   const pathname = usePathname();
