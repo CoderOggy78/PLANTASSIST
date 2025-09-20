@@ -10,10 +10,11 @@ import { Users, Send, ThumbsUp, MessageCircle, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { usePosts } from '@/hooks/use-posts';
 import { useAuth } from '@/hooks/use-auth';
+import { cn } from '@/lib/utils';
 
 export default function CommunityPage() {
     const { user } = useAuth();
-    const { posts, addPost, isLoaded } = usePosts();
+    const { posts, addPost, isLoaded, likePost, incrementCommentCount } = usePosts();
     const [newPostText, setNewPostText] = useState('');
 
     const handlePost = () => {
@@ -88,10 +89,10 @@ export default function CommunityPage() {
                     )}
                 </CardContent>
                 <CardFooter className="flex justify-start gap-6 border-t pt-4">
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-muted-foreground">
+                    <Button variant="ghost" size="sm" className={cn("flex items-center gap-2 text-muted-foreground", post.isLiked && 'text-primary')} onClick={() => likePost(post.id)}>
                         <ThumbsUp className="w-5 h-5"/> {post.likes}
                     </Button>
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-muted-foreground">
+                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-muted-foreground" onClick={() => incrementCommentCount(post.id)}>
                         <MessageCircle className="w-5 h-5"/> {post.comments} Comments
                     </Button>
                 </CardFooter>

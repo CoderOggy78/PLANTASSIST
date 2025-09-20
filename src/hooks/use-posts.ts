@@ -16,11 +16,12 @@ export interface Post {
   likes: number;
   comments: number;
   timestamp: number;
+  isLiked?: boolean; // To track if the current user liked the post
 }
 
 const POSTS_STORAGE_KEY = 'plantassist-posts';
 
-const initialMockPosts = [
+const initialMockPosts: Post[] = [
   {
     id: "mock-1",
     authorId: 'mock-user-1',
@@ -28,8 +29,8 @@ const initialMockPosts = [
     authorAvatar: 'https://picsum.photos/seed/avatar1/100',
     authorAvatarFallback: 'JD',
     text: "My tomato plants are getting these weird yellow spots on the leaves. I've tried neem oil but it doesn't seem to be working. Any suggestions?",
-    image: 'https://picsum.photos/seed/yellow-leaf/600/400',
-    imageHint: 'yellow spots',
+    image: 'https://picsum.photos/seed/sick-plant/600/400',
+    imageHint: 'sick plant',
     likes: 12,
     comments: 4,
     timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
@@ -41,8 +42,8 @@ const initialMockPosts = [
     authorAvatar: 'https://picsum.photos/seed/avatar2/100',
     authorAvatarFallback: 'JS',
     text: "Just wanted to share my success with using a baking soda spray for powdery mildew on my zucchini! Here's a before and after. So happy with the results!",
-    image: 'https://picsum.photos/seed/healthy-zucchini/600/400',
-    imageHint: 'healthy plant',
+    image: 'https://picsum.photos/seed/harvest/600/400',
+    imageHint: 'bountiful harvest',
     likes: 34,
     comments: 9,
     timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 day ago
@@ -54,8 +55,8 @@ const initialMockPosts = [
     authorAvatar: 'https://picsum.photos/seed/avatar3/100',
     authorAvatarFallback: 'SG',
     text: "Has anyone seen this kind of pest on their corn? They're small and black, and seem to be eating the silks. Not sure what to do.",
-    image: 'https://picsum.photos/seed/corn-pest/600/400',
-    imageHint: 'corn pest',
+    image: 'https://picsum.photos/seed/corn-field/600/400',
+    imageHint: 'corn field',
     likes: 5,
     comments: 2,
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3, // 3 days ago
@@ -129,5 +130,33 @@ export function usePosts() {
     savePosts(updatedPosts);
   }, [user, posts]);
 
-  return { posts, addPost, deletePost, isLoaded };
+  const likePost = useCallback((postId: string) => {
+    const updatedPosts = posts.map(p => {
+        if (p.id === postId) {
+            // In a real app, you'd prevent multiple likes from the same user.
+            // For this demo, we'll just toggle the like.
+            if (p.isLiked) {
+                return { ...p, likes: p.likes - 1, isLiked: false };
+            } else {
+                return { ...p, likes: p.likes + 1, isLiked: true };
+            }
+        }
+        return p;
+    });
+    savePosts(updatedPosts);
+  }, [posts]);
+
+  const incrementCommentCount = useCallback((postId: string) => {
+    const updatedPosts = posts.map(p => {
+        if (p.id === postId) {
+            // For this demo, we'll just increment the count.
+            // A real app would open a comment modal.
+            return { ...p, comments: p.comments + 1 };
+        }
+        return p;
+    });
+    savePosts(updatedPosts);
+  }, [posts]);
+
+  return { posts, addPost, deletePost, likePost, incrementCommentCount, isLoaded };
 }
