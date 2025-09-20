@@ -81,11 +81,11 @@ const identifyPlantDiseaseFromImageFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    const diagnosis = output!;
     
-    if (!diagnosis) {
-        throw new Error("Failed to get a diagnosis from the AI.");
+    if (!output) {
+        throw new Error("Failed to get a diagnosis from the AI. The response was null.");
     }
+    const diagnosis = output;
     
     // If a plant was identified and it has a disease, generate an image of a healthy plant
     if (diagnosis.plantName && diagnosis.diseaseName) {
