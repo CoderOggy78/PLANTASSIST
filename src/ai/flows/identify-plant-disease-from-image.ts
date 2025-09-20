@@ -43,18 +43,12 @@ export async function identifyPlantDiseaseFromImage(input: IdentifyPlantDiseaseF
 const prompt = ai.definePrompt({
   name: 'identifyPlantDiseaseFromImagePrompt',
   input: {schema: IdentifyPlantDiseaseFromImageInputSchema},
-  output: {schema: IdentifyPlantDiseaseFromImageOutputSchema.pick({
-    plantName: true,
-    diseaseName: true,
-    confidence: true,
-    effects: true,
-    remedies: true,
-  }).extend({
-      plantName: z.string().nullable(),
-      diseaseName: z.string().nullable(),
-      confidence: z.number().nullable(),
-      effects: z.string().nullable(),
-      remedies: z.string().nullable(),
+  output: {schema: z.object({
+    plantName: z.string().nullable(),
+    diseaseName: z.string().nullable(),
+    confidence: z.number().nullable(),
+    effects: z.string().nullable(),
+    remedies: z.string().nullable(),
   })},
   tools: [getWeatherForecast],
   prompt: `You are an expert plant pathologist. Your task is to identify the plant and any diseases from an image.
