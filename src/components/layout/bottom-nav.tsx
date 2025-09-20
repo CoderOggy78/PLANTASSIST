@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, UserCircle2, ScanLine, MessageSquare, Feather } from 'lucide-react';
+import { Home, BookOpen, UserCircle2, ScanLine, MessageSquare, Feather, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -16,9 +16,9 @@ const navItems = [
 
 const navItemsWithAlerts = [
   { href: '/home', label: 'Home', icon: Home },
-  { href: '/knowledge-base', label: 'Knowledge', icon: BookOpen },
-  { href: 'BLANK' }, // Placeholder for the FAB
   { href: '/alerts', label: 'Alerts', icon: Feather },
+  { href: 'BLANK' }, // Placeholder for the FAB
+  { href: '/community', label: 'Community', icon: Users },
   { href: '/chat', label: 'Chat', icon: MessageSquare },
   { href: '/profile', label: 'Profile', icon: UserCircle2 },
 ];
