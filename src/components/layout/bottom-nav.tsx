@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, UserCircle2, ScanLine, MessageSquare } from 'lucide-react';
+import { Home, BookOpen, UserCircle2, ScanLine, MessageSquare, Feather } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -14,8 +14,19 @@ const navItems = [
   { href: '/profile', label: 'Profile', icon: UserCircle2 },
 ];
 
+const navItemsWithAlerts = [
+  { href: '/home', label: 'Home', icon: Home },
+  { href: '/knowledge-base', label: 'Knowledge', icon: BookOpen },
+  { href: 'BLANK' }, // Placeholder for the FAB
+  { href: '/alerts', label: 'Alerts', icon: Feather },
+  { href: '/chat', label: 'Chat', icon: MessageSquare },
+  { href: '/profile', label: 'Profile', icon: UserCircle2 },
+];
+
+
 export default function BottomNav() {
   const pathname = usePathname();
+  const items = navItemsWithAlerts;
 
   return (
     <>
@@ -29,9 +40,9 @@ export default function BottomNav() {
 
       <nav className="fixed bottom-0 left-0 right-0 h-16 bg-card border-t border-border shadow-t-lg z-10">
         <div className="flex justify-around items-center h-full max-w-lg mx-auto">
-          {navItems.map((item, index) => {
+          {items.map((item, index) => {
             if (item.href === 'BLANK') {
-              return <div key={index} className="w-16" />; // Empty space for FAB
+              return <div key={index} className="w-12 sm:w-16" />; // Empty space for FAB
             }
             const isActive = pathname === item.href;
             return (
