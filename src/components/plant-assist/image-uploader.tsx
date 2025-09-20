@@ -1,9 +1,10 @@
+
 "use client";
 
 import { useFormState, useFormStatus } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Camera, Leaf, Loader2, X } from 'lucide-react';
+import { Camera, Leaf, Loader2, X, UploadCloud } from 'lucide-react';
 
 import { handleImageUpload, FormState } from '@/lib/actions';
 import { Button } from '@/components/ui/button';
@@ -22,15 +23,15 @@ const initialState: FormState = {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="w-full text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground">
+    <Button type="submit" disabled={pending} size="lg" className="w-full text-lg py-7 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg">
       {pending ? (
         <>
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          <Loader2 className="mr-2 h-6 w-6 animate-spin" />
           Identifying...
         </>
       ) : (
         <>
-          <Leaf className="mr-2 h-5 w-5" />
+          <Leaf className="mr-3 h-6 w-6" />
           Identify Disease
         </>
       )}
@@ -77,12 +78,12 @@ export default function ImageUploader() {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardContent className="p-4">
+      <Card className="overflow-hidden">
+        <CardContent className="p-4 sm:p-6">
           <form action={formAction} ref={formRef} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="plant-image" className="sr-only">Upload a Plant Image</Label>
-              <div className="relative border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary transition-colors bg-card">
+              <div className="relative border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-primary transition-colors bg-card/50 hover:bg-card">
                 <Input
                   id="plant-image"
                   name="image"
@@ -94,13 +95,13 @@ export default function ImageUploader() {
                   required
                 />
                 {!preview ? (
-                  <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground pointer-events-none">
-                    <Camera className="w-10 h-10" />
-                    <p className="font-semibold">Click to upload or drag & drop</p>
-                    <p className="text-xs">PNG or JPG recommended</p>
+                  <div className="flex flex-col items-center justify-center space-y-3 text-muted-foreground pointer-events-none py-8">
+                    <UploadCloud className="w-12 h-12 text-primary" />
+                    <p className="font-semibold text-lg">Click to upload or drag & drop</p>
+                    <p className="text-sm">PNG, JPG or WEBP recommended</p>
                   </div>
                 ) : (
-                  <div className="relative w-full h-48">
+                  <div className="relative w-full h-56">
                     <Image
                       src={preview}
                       alt="Plant preview"
@@ -111,7 +112,7 @@ export default function ImageUploader() {
                       type="button"
                       variant="destructive"
                       size="icon"
-                      className="absolute top-2 right-2 bg-destructive/80 hover:bg-destructive text-destructive-foreground rounded-full h-8 w-8"
+                      className="absolute top-2 right-2 bg-destructive/80 hover:bg-destructive text-destructive-foreground rounded-full h-8 w-8 z-10"
                       onClick={handleRemoveImage}
                     >
                       <X className="w-4 h-4" />

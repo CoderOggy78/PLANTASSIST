@@ -13,11 +13,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   
   const noNavRoutes = ['/login', '/signup', '/forgot-password', '/onboarding'];
   const authRoutes = ['/login', '/signup', '/forgot-password'];
-
+  
   useEffect(() => {
     if (loading) return;
 
-    if (!user && !authRoutes.includes(pathname) && pathname !== '/onboarding') {
+    if (!user && !noNavRoutes.includes(pathname)) {
       router.push('/login');
     } else if (user && authRoutes.includes(pathname)) {
       router.push('/home');
@@ -27,7 +27,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const showNav = !noNavRoutes.includes(pathname) && !!user;
 
-  if (loading || (!user && !authRoutes.includes(pathname) && pathname !== '/onboarding') || (user && authRoutes.includes(pathname))) {
+  if (loading || (!user && !noNavRoutes.includes(pathname)) || (user && authRoutes.includes(pathname))) {
     return (
       <div className="flex items-center justify-center min-h-screen">
           <div className="text-primary">Loading...</div>
@@ -37,7 +37,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-grow pb-20">{children}</main>
+      <main className="flex-grow pb-24 sm:pb-28">{children}</main>
       {showNav && <BottomNav />}
     </div>
   );
