@@ -7,8 +7,17 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import wav from 'wav';
+import {googleAI} from '@genkit-ai/googleai';
 
-export async function askPlantDoctor(question: string): Promise<string> {
+export const AskPlantDoctorOutputSchema = z.object({
+  text: z.string().describe('The text response from the AI.'),
+  audio: z.string().optional().describe('The audio response from the AI as a data URI.'),
+});
+
+export type AskPlantDoctorOutput = z.infer<typeof AskPlantDoctorOutputSchema>;
+
+export async function askPlantDoctor(question: string): Promise<AskPlantDoctorOutput> {
   return askPlantDoctorFlow(question);
 }
 
@@ -23,14 +32,71 @@ const prompt = ai.definePrompt({
   User Question: {{{input}}}`,
 });
 
+async function toWav(
+    pcmData: Buffer,
+    channels = 1,
+    rate = 24000,
+    sampleWidth = 2
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const writer = new wav.Writer({
+        channels,
+        sampleRate: rate,
+        bitDepth: sampleWidth * 8,
+      });
+  
+      let bufs = [] as any[];
+      writer.on('error', reject);
+      writer.on('data', function (d) {
+        bufs.push(d);
+      });
+      writer.on('end', function () {
+        resolve(Buffer.concat(bufs).toString('base64'));
+      });
+  
+      writer.write(pcmData);
+      writer.end();
+    });
+  }
+
 const askPlantDoctorFlow = ai.defineFlow(
   {
     name: 'askPlantDoctorFlow',
     inputSchema: z.string(),
-    outputSchema: z.string(),
+    outputSchema: AskPlantDoctorOutputSchema,
   },
   async question => {
-    const {output} = await prompt(question);
-    return output!;
+    const [{output: text}, {media}] = await Promise.all([
+        prompt(question),
+        ai.generate({
+            model: googleAI.model('gemini-2.5-flash-preview-tts'),
+            config: {
+              responseModalities: ['AUDIO'],
+              speechConfig: {
+                voiceConfig: {
+                  prebuiltVoiceConfig: { voiceName: 'Algenib' },
+                },
+              },
+            },
+            prompt: question,
+          })
+    ])
+
+    if (!text) {
+        throw new Error('No text response from AI');
+    }
+    
+    if (!media) {
+        return { text };
+    }
+
+    const audioBuffer = Buffer.from(
+        media.url.substring(media.url.indexOf(',') + 1),
+        'base64'
+    );
+      
+    const audioDataUri = 'data:audio/wav;base64,' + (await toWav(audioBuffer));
+
+    return { text, audio: audioDataUri };
   }
 );
