@@ -1,4 +1,6 @@
 
+'use client';
+
 import { getShops } from '@/lib/firebase/firestore';
 import ShopCard from '@/components/plant-assist/shop-card';
 import { Store, ArrowLeft } from 'lucide-react';
