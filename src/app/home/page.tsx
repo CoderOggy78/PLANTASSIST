@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, ScanLine, BookOpen, MessageSquare, Users } from "lucide-react";
+import { ArrowRight, ScanLine, BookOpen, MessageSquare, Users, CalendarDays } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from 'framer-motion';
