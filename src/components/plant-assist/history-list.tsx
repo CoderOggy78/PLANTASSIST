@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -47,21 +48,24 @@ export default function HistoryList() {
           <div className="sm:w-1/3 relative h-36 sm:h-auto flex-shrink-0">
             <Image
               src={item.image}
-              alt={item.result.diseaseName || 'Plant'}
+              alt={item.result.plantName || 'Plant'}
               fill
               className="object-cover"
             />
           </div>
           <div className="sm:w-2/3 flex flex-col">
             <CardHeader>
-              <CardTitle>{item.result.diseaseName || 'Analysis Result'}</CardTitle>
+              <CardTitle>{item.result.diseaseName || `Healthy ${item.result.plantName}` || 'Analysis Result'}</CardTitle>
               <CardDescription>
                 {item.result.diseaseName ? `Identified on ${item.date}` : 'No disease was detected.'}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
                 {item.result.diseaseName && (
-                    <p className="text-sm text-muted-foreground line-clamp-2">{item.result.effects}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{item.result.effects || 'No effects described.'}</p>
+                )}
+                 {!item.result.diseaseName && (
+                    <p className="text-sm text-muted-foreground">The plant was identified as a {item.result.plantName} and appears to be healthy.</p>
                 )}
             </CardContent>
           </div>

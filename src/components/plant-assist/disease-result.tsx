@@ -36,7 +36,7 @@ export default function DiseaseResult({ result, imagePreview }: DiseaseResultPro
           <div>
             <CardTitle className="text-primary">All Clear!</CardTitle>
             <CardDescription className="text-primary/80">
-              Our analysis identified the plant as a <strong>{result.plantName}</strong> and did not detect any diseases. Keep up the great work!
+              Our analysis identified the plant as a <strong>{result.plantName || 'Unknown Plant'}</strong> and did not detect any diseases. Keep up the great work!
             </CardDescription>
           </div>
         </CardHeader>
@@ -52,8 +52,8 @@ export default function DiseaseResult({ result, imagePreview }: DiseaseResultPro
           {result.diseaseName}
         </CardTitle>
         <CardDescription className="pt-2 flex flex-wrap gap-x-4 gap-y-2">
-          <span>Identified Plant: <Badge variant="outline">{result.plantName}</Badge></span>
-          <span>Confidence Score: <Badge variant="secondary" className="font-semibold">{Math.round((result.confidence || 0) * 100)}%</Badge></span>
+          <span>Identified Plant: <Badge variant="outline">{result.plantName || 'Unknown'}</Badge></span>
+          {result.confidence && <span>Confidence Score: <Badge variant="secondary" className="font-semibold">{Math.round(result.confidence * 100)}%</Badge></span>}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -76,11 +76,11 @@ export default function DiseaseResult({ result, imagePreview }: DiseaseResultPro
 
         <div className="space-y-2">
           <h3 className="text-lg font-semibold flex items-center gap-2"><HeartPulse className="text-primary"/>Effects on Plant</h3>
-          <p className="text-muted-foreground">{result.effects}</p>
+          <p className="text-muted-foreground">{result.effects || 'No details available.'}</p>
         </div>
         <div className="space-y-2">
           <h3 className="text-lg font-semibold flex items-center gap-2"><ShieldHalf className="text-primary"/>Suggested Remedies</h3>
-          <p className="text-muted-foreground">{result.remedies}</p>
+          <p className="text-muted-foreground">{result.remedies || 'No specific remedies provided.'}</p>
         </div>
 
         <Separator />

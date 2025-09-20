@@ -26,9 +26,11 @@ export default function KnowledgeBaseList({ diseases }: KnowledgeBaseListProps) 
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const filteredDiseases = diseases.filter(disease =>
-    disease.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    disease.effects.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    disease.remedies.toLowerCase().includes(searchTerm.toLowerCase())
+    disease && disease.name && disease.effects && disease.remedies && (
+      disease.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      disease.effects.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      disease.remedies.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
   
   const getImageForDisease = (diseaseName: string) => {
@@ -67,6 +69,7 @@ export default function KnowledgeBaseList({ diseases }: KnowledgeBaseListProps) 
       {filteredDiseases.length > 0 ? (
         <Accordion type="single" collapsible className="w-full space-y-2" value={openItem} onValueChange={setOpenItem}>
           {filteredDiseases.map((disease) => {
+            if (!disease || !disease.name) return null;
             const image = getImageForDisease(disease.name);
 
             return (
@@ -118,4 +121,3 @@ export default function KnowledgeBaseList({ diseases }: KnowledgeBaseListProps) 
     </div>
   );
 }
-
