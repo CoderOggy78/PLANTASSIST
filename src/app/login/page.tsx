@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Leaf, Loader2 } from "lucide-react";
+import { Sprout, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from "next/navigation";
 
@@ -57,20 +57,26 @@ export default function LoginPage() {
         }
     }
 
+    useEffect(() => {
+        if (user) {
+            router.push('/home');
+        }
+    }, [user, router]);
+
+
     if (user) {
-        router.push('/home');
         return null;
     }
 
     return (
         <div className="flex items-center justify-center min-h-screen p-4 bg-background">
-            <Card className="w-full max-w-sm">
+            <Card className="w-full max-w-sm shadow-xl">
                 <CardHeader className="text-center">
                     <Link href="/" className="flex justify-center mb-4">
-                        <Leaf className="w-12 h-12 text-primary" />
+                        <Sprout className="w-14 h-14 text-primary" />
                     </Link>
-                    <CardTitle className="text-2xl font-headline">Welcome Back</CardTitle>
-                    <CardDescription>Log in to your PlantAssist account</CardDescription>
+                    <CardTitle className="text-3xl font-headline">Welcome Back</CardTitle>
+                    <CardDescription className="text-md">Log in to your PlantAssist account</CardDescription>
                 </CardHeader>
                 <CardContent>
                     {error && (
@@ -91,7 +97,7 @@ export default function LoginPage() {
                         <div className="text-sm">
                             <Link href="/forgot-password" passHref className="underline text-primary hover:text-primary/80">Forgot password?</Link>
                         </div>
-                        <Button type="submit" className="w-full" disabled={loading}>
+                        <Button type="submit" className="w-full font-semibold" disabled={loading}>
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Log In
                         </Button>
@@ -102,13 +108,13 @@ export default function LoginPage() {
                             <span className="w-full border-t" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
+                            <span className="bg-card px-2 text-muted-foreground">
                                 Or continue with
                             </span>
                         </div>
                     </div>
 
-                    <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={googleLoading}>
+                    <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleSignIn} disabled={googleLoading}>
                         {googleLoading ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         ) : (
