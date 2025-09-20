@@ -4,7 +4,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import HistoryList from "@/components/plant-assist/history-list";
 import ThemeSwitcher from "@/components/plant-assist/theme-switcher";
 import { useAuth } from "@/hooks/use-auth";
@@ -23,12 +22,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import LanguageSwitcher from "@/components/plant-assist/language-switcher";
 
 export default function ProfilePage() {
   const { user, signOut, loading } = useAuth();
   const { posts, deletePost, isLoaded: postsLoaded } = usePosts();
   const router = useRouter();
-  const { language, setLanguage, t } = useLocalization();
+  const { t } = useLocalization();
 
   if (loading) {
     return <div>Loading...</div>; // Or a skeleton loader
@@ -67,18 +67,8 @@ export default function ProfilePage() {
             <ThemeSwitcher />
           </div>
           <div className="flex items-center justify-between">
-            <span className="font-medium flex items-center gap-2"><Languages className="w-5 h-5 text-primary"/>{t('appLanguage')}</span>
-            <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'hi' | 'mr' | 'gu')}>
-                <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select Language" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="hi">Hindi (हिन्दी)</SelectItem>
-                    <SelectItem value="mr">Marathi (मराठी)</SelectItem>
-                    <SelectItem value="gu">Gujarati (ગુજરાતી)</SelectItem>
-                </SelectContent>
-            </Select>
+             <span className="font-medium flex items-center gap-2"><Languages className="w-5 h-5 text-primary"/>{t('appLanguage')}</span>
+             <LanguageSwitcher />
           </div>
         </CardContent>
       </Card>
