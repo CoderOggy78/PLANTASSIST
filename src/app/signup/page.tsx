@@ -56,6 +56,7 @@ export default function SignupPage() {
         setGoogleLoading(true);
         try {
             await signInWithGoogle();
+            router.push('/onboarding');
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -63,7 +64,7 @@ export default function SignupPage() {
         }
     }
 
-    if (user) {
+    if (user && (pathname === '/login' || pathname === '/signup')) {
         router.push('/home');
         return null;
     }
