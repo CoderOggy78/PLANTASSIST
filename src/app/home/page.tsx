@@ -27,7 +27,7 @@ export default function HomePage() {
             </header>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-                <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
+                <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-primary/10 backdrop-blur-sm lg:col-span-2 border-2 border-primary/50">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3">
                         <ScanLine className="w-7 h-7 text-primary" />
@@ -53,24 +53,8 @@ export default function HomePage() {
                     <CardContent>
                         <p className="text-muted-foreground mb-4">Ask our AI Plant Doctor any question.</p>
                         <motion.div whileTap={{ scale: 0.95 }}>
-                            <Button asChild className="font-semibold">
+                            <Button asChild className="font-semibold" variant="secondary">
                             <Link href="/chat">Start Chat <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                            </Button>
-                        </motion.div>
-                    </CardContent>
-                </Card>
-                <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-3">
-                        <BookOpen className="w-7 h-7 text-primary" />
-                        <span className="font-headline text-2xl">Knowledge Base</span>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground mb-4">Browse common diseases and their remedies.</p>
-                         <motion.div whileTap={{ scale: 0.95 }}>
-                            <Button asChild className="font-semibold">
-                            <Link href="/knowledge-base">Explore <ArrowRight className="ml-2 h-4 w-4" /></Link>
                             </Button>
                         </motion.div>
                     </CardContent>
@@ -85,8 +69,40 @@ export default function HomePage() {
                     <CardContent>
                         <p className="text-muted-foreground mb-4">Connect with other farmers and share tips.</p>
                         <motion.div whileTap={{ scale: 0.95 }}>
-                            <Button asChild className="font-semibold">
+                            <Button asChild className="font-semibold" variant="secondary">
                             <Link href="/community">Join Forum <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </motion.div>
+                    </CardContent>
+                </Card>
+                <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm lg:col-span-2">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-3">
+                        <BookOpen className="w-7 h-7 text-primary" />
+                        <span className="font-headline text-2xl">Knowledge Base</span>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground mb-4">Browse common diseases and their remedies.</p>
+                         <motion.div whileTap={{ scale: 0.95 }}>
+                            <Button asChild className="font-semibold" variant="secondary">
+                            <Link href="/knowledge-base">Explore <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </motion.div>
+                    </CardContent>
+                </Card>
+                 <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm lg:col-span-2">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-3">
+                        <CalendarDays className="w-7 h-7 text-primary" />
+                        <span className="font-headline text-2xl">Crop Calendar</span>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground mb-4">Plan your sowing, fertilizing, and harvesting schedule.</p>
+                        <motion.div whileTap={{ scale: 0.95 }}>
+                            <Button asChild className="font-semibold" variant="secondary">
+                            <Link href="/calendar">View Calendar <ArrowRight className="ml-2 h-4 w-4" /></Link>
                             </Button>
                         </motion.div>
                     </CardContent>

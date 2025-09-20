@@ -45,7 +45,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="flex-grow pb-28 sm:pb-28"
+            className="flex-grow pb-28 sm:pb-24"
         >
             {children}
         </motion.main>
