@@ -9,13 +9,8 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import wav from 'wav';
 import {googleAI} from '@genkit-ai/googleai';
+import { AskPlantDoctorOutput, AskPlantDoctorOutputSchema } from '@/lib/types';
 
-export const AskPlantDoctorOutputSchema = z.object({
-  text: z.string().describe('The text response from the AI.'),
-  audio: z.string().optional().describe('The audio response from the AI as a data URI.'),
-});
-
-export type AskPlantDoctorOutput = z.infer<typeof AskPlantDoctorOutputSchema>;
 
 export async function askPlantDoctor(question: string): Promise<AskPlantDoctorOutput> {
   return askPlantDoctorFlow(question);
