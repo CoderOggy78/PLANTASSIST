@@ -8,14 +8,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Users, Send, ThumbsUp, MessageCircle, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { usePosts } from '@/hooks/use-posts';
+import { usePosts, Post } from '@/hooks/use-posts';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
+import CommentDialog from '@/components/plant-assist/comment-dialog';
 
 export default function CommunityPage() {
     const { user } = useAuth();
-    const { posts, addPost, isLoaded, likePost, incrementCommentCount } = usePosts();
+    const { posts, addPost, isLoaded, likePost, addComment } = usePosts();
     const [newPostText, setNewPostText] = useState('');
+    const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+    const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
 
     const handlePost = () => {
         if (newPostText.trim()) {
@@ -23,10 +26,16 @@ export default function CommunityPage() {
             setNewPostText('');
         }
     }
+    
+    const handleCommentClick = (post: Post) => {
+        setSelectedPost(post);
+        setIsCommentDialogOpen(true);
+    };
 
     const sortedPosts = posts.sort((a, b) => b.timestamp - a.timestamp);
 
   return (
+    <>
     <div className="container mx-auto max-w-3xl py-4">
        <header className="text-center mb-6">
         <h1 className="text-3xl font-bold text-primary font-headline flex items-center justify-center gap-3">
@@ -92,8 +101,8 @@ export default function CommunityPage() {
                     <Button variant="ghost" size="sm" className={cn("flex items-center gap-2 text-muted-foreground", post.isLiked && 'text-primary')} onClick={() => likePost(post.id)}>
                         <ThumbsUp className="w-5 h-5"/> {post.likes}
                     </Button>
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-muted-foreground" onClick={() => incrementCommentCount(post.id)}>
-                        <MessageCircle className="w-5 h-5"/> {post.comments} Comments
+                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-muted-foreground" onClick={() => handleCommentClick(post)}>
+                        <MessageCircle className="w-5 h-5"/> {post.comments.length} Comments
                     </Button>
                 </CardFooter>
              </Card>
@@ -107,5 +116,13 @@ export default function CommunityPage() {
         )}
       </div>
     </div>
+    
+    <CommentDialog 
+        post={selectedPost}
+        isOpen={isCommentDialogOpen}
+        onOpenChange={setIsCommentDialogOpen}
+        onAddComment={addComment}
+    />
+    </>
   );
 }

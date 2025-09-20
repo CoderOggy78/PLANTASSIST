@@ -4,6 +4,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './use-auth';
 
+export interface Comment {
+    id: string;
+    authorId: string;
+    authorName: string;
+    authorAvatar: string;
+    authorAvatarFallback: string;
+    text: string;
+    timestamp: number;
+}
+
 export interface Post {
   id: string;
   authorId: string;
@@ -14,7 +24,7 @@ export interface Post {
   image?: string;
   imageHint?: string;
   likes: number;
-  comments: number;
+  comments: Comment[];
   timestamp: number;
   isLiked?: boolean; // To track if the current user liked the post
 }
@@ -32,7 +42,9 @@ const initialMockPosts: Post[] = [
     image: 'https://picsum.photos/seed/sick-plant/600/400',
     imageHint: 'sick plant',
     likes: 12,
-    comments: 4,
+    comments: [
+        { id: 'comment-1-1', authorId: 'mock-user-2', authorName: 'Jane Smith', authorAvatar: 'https://picsum.photos/seed/avatar2/100', authorAvatarFallback: 'JS', text: 'It might be a nutrient deficiency. Have you checked your soil pH?', timestamp: Date.now() - 1000 * 60 * 30 },
+    ],
     timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
   },
   {
@@ -45,7 +57,7 @@ const initialMockPosts: Post[] = [
     image: 'https://picsum.photos/seed/harvest/600/400',
     imageHint: 'bountiful harvest',
     likes: 34,
-    comments: 9,
+    comments: [],
     timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 day ago
   },
   {
@@ -58,7 +70,7 @@ const initialMockPosts: Post[] = [
     image: 'https://picsum.photos/seed/corn-field/600/400',
     imageHint: 'corn field',
     likes: 5,
-    comments: 2,
+    comments: [],
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3, // 3 days ago
   },
 ];
@@ -108,7 +120,7 @@ export function usePosts() {
         authorAvatarFallback: (user.displayName || 'A').charAt(0).toUpperCase(),
         text: text,
         likes: 0,
-        comments: 0,
+        comments: [],
         timestamp: Date.now(),
     };
     
@@ -146,17 +158,29 @@ export function usePosts() {
     savePosts(updatedPosts);
   }, [posts]);
 
-  const incrementCommentCount = useCallback((postId: string) => {
+  const addComment = useCallback((postId: string, commentText: string) => {
+    if (!user) {
+        console.error("User must be logged in to comment.");
+        return;
+    }
+    const newComment: Comment = {
+        id: new Date().toISOString(),
+        authorId: user.uid,
+        authorName: user.displayName || 'Anonymous Farmer',
+        authorAvatar: user.photoURL || `https://picsum.photos/seed/${user.uid}/100`,
+        authorAvatarFallback: (user.displayName || 'A').charAt(0).toUpperCase(),
+        text: commentText,
+        timestamp: Date.now(),
+    };
     const updatedPosts = posts.map(p => {
         if (p.id === postId) {
-            // For this demo, we'll just increment the count.
-            // A real app would open a comment modal.
-            return { ...p, comments: p.comments + 1 };
+            return { ...p, comments: [...p.comments, newComment] };
         }
         return p;
     });
     savePosts(updatedPosts);
-  }, [posts]);
+  }, [user, posts]);
 
-  return { posts, addPost, deletePost, likePost, incrementCommentCount, isLoaded };
+
+  return { posts, addPost, deletePost, likePost, addComment, isLoaded };
 }
