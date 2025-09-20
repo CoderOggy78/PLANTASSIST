@@ -24,10 +24,10 @@ const IdentifyPlantDiseaseFromImageInputSchema = z.object({
 export type IdentifyPlantDiseaseFromImageInput = z.infer<typeof IdentifyPlantDiseaseFromImageInputSchema>;
 
 const IdentifyPlantDiseaseFromImageOutputSchema = z.object({
-  diseaseName: z.string().describe('The name of the identified disease, or null if no disease is identified.'),
-  confidence: z.number().describe('The confidence level of the disease identification (0-1), or null if no disease is identified.'),
-  effects: z.string().describe('How the disease affects plants, or null if no disease is identified.'),
-  remedies: z.string().describe('Suggested remedies for the disease, or null if no disease is identified.'),
+  diseaseName: z.string().nullable().describe('The name of the identified disease, or null if no disease is identified or the image is not a plant.'),
+  confidence: z.number().nullable().describe('The confidence level of the disease identification (0-1), or null if no disease is identified.'),
+  effects: z.string().nullable().describe('How the disease affects plants, or null if no disease is identified.'),
+  remedies: z.string().nullable().describe('Suggested remedies for the disease, or null if no disease is identified.'),
 });
 
 export type IdentifyPlantDiseaseFromImageOutput = z.infer<typeof IdentifyPlantDiseaseFromImageOutputSchema>;
@@ -41,15 +41,17 @@ const prompt = ai.definePrompt({
   input: {schema: IdentifyPlantDiseaseFromImageInputSchema},
   output: {schema: IdentifyPlantDiseaseFromImageOutputSchema},
   tools: [getWeatherForecast],
-  prompt: `You are an expert plant pathologist. Given an image of a plant and its crop type, you will identify potential diseases affecting the plant.
+  prompt: `You are an expert plant pathologist. Your task is to identify plant diseases from an image.
 
-  Analyze the following image and determine if there are any visible signs of known plant diseases. Focus solely on visual diagnostic elements in the picture itself.  Do not speculate or make assumptions based on regional prevalence or other external factors.
+  First, determine if the image provided is of a plant. If it is not a plant, you MUST set diseaseName, confidence, effects, and remedies to null.
+
+  If the image is a plant, analyze it for any visible signs of known plant diseases. Focus solely on visual diagnostic elements in the picture itself. Do not speculate or make assumptions based on regional prevalence or other external factors.
 
   If a disease is identified, provide the disease name, a confidence level (0-1), how it affects plants, and suggested remedies.
   
   If the user provides their location (latitude and longitude), you MUST use the getWeatherForecast tool to get the current weather. Based on the forecast, you MUST tailor your remedy suggestions. For example, if it is currently raining or rain is forecasted, advise the user to avoid spraying and suggest alternative application methods or to wait for a dry period. If it is very windy, suggest spraying early in the morning.
   
-  If no disease is identified, set diseaseName, effects, and remedies to null, and confidence to null.
+  If the image is a plant but no disease is identified, set diseaseName, effects, and remedies to null, and confidence to null.
 
   Crop Type: {{{cropType}}}
   Image: {{media url=photoDataUri}}

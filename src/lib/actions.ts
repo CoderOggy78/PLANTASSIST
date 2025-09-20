@@ -64,18 +64,9 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
         }
     }
 
-    if (!result.diseaseName) {
-        return {
-            status: 'success',
-            message: 'No disease identified in the image.',
-            data: result,
-            timestamp: Date.now(),
-        }
-    }
-
     return {
         status: 'success',
-        message: 'Disease identified successfully.',
+        message: 'Analysis complete.',
         data: result,
         timestamp: Date.now(),
     };

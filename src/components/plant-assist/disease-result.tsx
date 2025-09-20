@@ -35,7 +35,7 @@ export default function DiseaseResult({ result, imagePreview }: DiseaseResultPro
           <div>
             <CardTitle className="text-primary">All Clear!</CardTitle>
             <CardDescription className="text-primary/80">
-              Our analysis did not detect any diseases on your plant. Keep up the great work!
+              Our analysis did not detect any diseases on your plant, or the image was not a plant. Keep up the great work!
             </CardDescription>
           </div>
         </CardHeader>
