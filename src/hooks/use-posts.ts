@@ -174,7 +174,8 @@ export function usePosts() {
     };
     const updatedPosts = posts.map(p => {
         if (p.id === postId) {
-            return { ...p, comments: [...p.comments, newComment] };
+            const existingComments = p.comments || [];
+            return { ...p, comments: [...existingComments, newComment] };
         }
         return p;
     });
