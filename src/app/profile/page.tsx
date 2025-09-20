@@ -4,10 +4,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import HistoryList from "@/components/plant-assist/history-list";
 import ThemeSwitcher from "@/components/plant-assist/theme-switcher";
 import { useAuth } from "@/hooks/use-auth";
-import { LogOut, User as UserIcon } from "lucide-react";
+import { LogOut, User as UserIcon, Languages } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
@@ -43,10 +44,24 @@ export default function ProfilePage() {
           <CardTitle>Settings</CardTitle>
           <CardDescription>Manage your app preferences.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="font-medium">App Theme</span>
             <ThemeSwitcher />
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="font-medium flex items-center gap-2"><Languages className="w-5 h-5 text-primary"/>App Language</span>
+            <Select defaultValue="en">
+                <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select Language" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="hi">Hindi (हिन्दी)</SelectItem>
+                    <SelectItem value="mr">Marathi (मराठी)</SelectItem>
+                    <SelectItem value="gu">Gujarati (ગુજરાતી)</SelectItem>
+                </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
