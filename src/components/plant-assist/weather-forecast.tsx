@@ -7,16 +7,9 @@ import { Loader2, MapPin, AlertTriangle, CloudSun } from 'lucide-react';
 import { Button } from '../ui/button';
 import WeatherIcon from './weather-icon';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { fetchWeather, ForecastDay } from '@/lib/weather-actions';
 
 type Status = 'idle' | 'loading' | 'success' | 'error' | 'denied';
-
-interface ForecastDay {
-    date: string;
-    dayOfWeek: string;
-    avgTemp: number;
-    weather: string;
-    weatherDescription: string;
-}
 
 export default function WeatherForecast() {
   const [status, setStatus] = useState<Status>('idle');
@@ -27,11 +20,24 @@ export default function WeatherForecast() {
     setStatus('loading');
     setError(null);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        fetchWeather({
+      async (position) => {
+        try {
+          const data = await fetchWeather({
             latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-        });
+            longitude: position.coords.longitude,
+          });
+          if (data.error) {
+            setStatus('error');
+            setError(data.error);
+          } else {
+            setForecast(data.forecast);
+            setStatus('success');
+          }
+        } catch (err) {
+          console.error("Failed to fetch weather data:", err);
+          setStatus('error');
+          setError("Could not retrieve weather forecast.");
+        }
       },
       (error) => {
         console.error("Geolocation error:", error);
@@ -46,63 +52,6 @@ export default function WeatherForecast() {
     );
   };
   
-  const fetchWeather = async ({ latitude, longitude }: { latitude: number, longitude: number }) => {
-    // This action will securely fetch the weather on the server.
-    // For demonstration, we are calling a client-side fetch, but in a real app
-    // you'd create a server action that calls the Genkit flow to hide the API key.
-    const apiKey = process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY || "6d055e39ee237af35ca066f35474e9df";
-    
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Weather API request failed with status ${response.status}`);
-      }
-      const data = await response.json();
-      
-      const dailyForecasts: { [key: string]: { temps: number[], weather: string[], descriptions: string[] } } = {};
-
-      data.list.forEach((item: any) => {
-        const date = new Date(item.dt * 1000).toISOString().split('T')[0];
-        if (!dailyForecasts[date]) {
-          dailyForecasts[date] = { temps: [], weather: [], descriptions: [] };
-        }
-        dailyForecasts[date].temps.push(item.main.temp);
-        dailyForecasts[date].weather.push(item.weather[0].main);
-        dailyForecasts[date].descriptions.push(item.weather[0].description);
-      });
-
-      const processedForecast = Object.entries(dailyForecasts).slice(0, 5).map(([date, dayData]) => {
-        const avgTemp = dayData.temps.reduce((a, b) => a + b, 0) / dayData.temps.length;
-        
-        const weatherCounts = dayData.weather.reduce((acc, w) => {
-            acc[w] = (acc[w] || 0) + 1;
-            return acc;
-        }, {} as Record<string, number>);
-        const mostCommonWeather = Object.keys(weatherCounts).reduce((a, b) => weatherCounts[a] > weatherCounts[b] ? a : b);
-        const mostCommonDescription = dayData.descriptions[dayData.weather.indexOf(mostCommonWeather)] || mostCommonWeather;
-
-
-        return {
-          date,
-          dayOfWeek: new Date(date).toLocaleDateString(undefined, { weekday: 'short' }),
-          avgTemp: Math.round(avgTemp),
-          weather: mostCommonWeather,
-          weatherDescription: mostCommonDescription,
-        };
-      });
-
-      setForecast(processedForecast);
-      setStatus('success');
-
-    } catch (error) {
-      console.error("Failed to fetch weather data:", error);
-      setStatus('error');
-      setError("Could not retrieve weather forecast.");
-    }
-  }
-
 
   if (status === 'idle') {
     return (
