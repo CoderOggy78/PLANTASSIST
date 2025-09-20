@@ -95,7 +95,7 @@ export default function CalendarPage() {
                             key={date.toISOString()} 
                             className={cn(
                                 "flex items-start gap-4 p-3 rounded-lg cursor-pointer transition-all",
-                                isSelected ? "bg-primary/10 shadow-sm" : "hover:bg-muted/50"
+                                isSelected ? "bg-primary/10 shadow-sm" : "hover:bg-muted/50 hover:shadow-md hover:-translate-y-0.5"
                             )}
                             onClick={() => setSelectedDate(date)}
                         >

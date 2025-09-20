@@ -77,7 +77,7 @@ export default function CommunityPage() {
             </div>
         ) : sortedPosts.length > 0 ? (
             sortedPosts.map((post) => (
-             <Card key={post.id} className="hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+             <Card key={post.id} className="hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300">
                 <CardHeader>
                     <div className="flex items-center gap-3">
                         <Avatar>
