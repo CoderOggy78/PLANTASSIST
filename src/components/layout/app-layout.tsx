@@ -37,7 +37,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-grow pb-24 sm:pb-28">{children}</main>
+      <main className="flex-grow pb-28 sm:pb-28">{children}</main>
       {showNav && <BottomNav />}
     </div>
   );
