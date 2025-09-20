@@ -11,6 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Send, MessageCircle, Loader2 } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface CommentDialogProps {
   post: Post | null;
@@ -24,6 +26,7 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [isImageZoomed, setIsImageZoomed] = useState(false);
   
   const handleAddComment = async () => {
     if (newComment.trim() && post) {
@@ -46,6 +49,10 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
             }
         }, 100);
     }
+    // Reset image zoom when dialog opens
+    if (isOpen) {
+        setIsImageZoomed(false);
+    }
   }, [post?.comments?.length, isOpen]);
 
   if (!post) return null;
@@ -58,12 +65,33 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
       <DialogContent className="max-w-2xl h-[80vh] flex flex-col p-0">
         <DialogHeader className="p-6 pb-2">
           <DialogTitle>Comments on {post.authorName}'s post</DialogTitle>
-          <DialogDescription>
-            Replying to: "{post.text.substring(0, 50)}..."
-          </DialogDescription>
         </DialogHeader>
         <ScrollArea className="flex-1 px-6" ref={scrollAreaRef}>
           <div className="space-y-4">
+            <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                Replying to: "{post.text}"
+            </p>
+            {post.image && (
+                 <motion.div 
+                    className="relative aspect-video rounded-lg overflow-hidden border cursor-pointer"
+                    onClick={() => setIsImageZoomed(!isImageZoomed)}
+                    animate={{ 
+                        scale: isImageZoomed ? 1.1 : 1,
+                        rotateY: isImageZoomed ? 10 : 0
+                    }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    style={{ perspective: '1000px' }}
+                >
+                    <Image 
+                        src={post.image}
+                        alt="Post image"
+                        fill
+                        className="object-cover"
+                        data-ai-hint={post.imageHint}
+                    />
+                </motion.div>
+            )}
+
             {sortedComments.length > 0 ? (
                 sortedComments.map((comment: Comment) => (
                     <div key={comment.id} className="flex items-start gap-3">

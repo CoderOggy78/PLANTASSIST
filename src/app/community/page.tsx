@@ -12,6 +12,7 @@ import { usePosts, Post } from '@/hooks/use-posts';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import CommentDialog from '@/components/plant-assist/comment-dialog';
+import { motion } from 'framer-motion';
 
 export default function CommunityPage() {
     const { user, loading: authLoading } = useAuth();
@@ -20,6 +21,7 @@ export default function CommunityPage() {
     const [isPosting, setIsPosting] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
+    const [zoomedImageId, setZoomedImageId] = useState<string | null>(null);
 
     const handlePost = async () => {
         if (newPostText.trim()) {
@@ -33,6 +35,10 @@ export default function CommunityPage() {
     const handleCommentClick = (post: Post) => {
         setSelectedPost(post);
         setIsCommentDialogOpen(true);
+    };
+
+    const handleImageClick = (postId: string) => {
+        setZoomedImageId(zoomedImageId === postId ? null : postId);
     };
 
     const sortedPosts = posts.sort((a, b) => b.timestamp - a.timestamp);
@@ -90,7 +96,16 @@ export default function CommunityPage() {
                 <CardContent className="space-y-4">
                     <p className="text-muted-foreground whitespace-pre-wrap">{post.text}</p>
                     {post.image && (
-                        <div className="relative aspect-video rounded-lg overflow-hidden border">
+                        <motion.div 
+                            className="relative aspect-video rounded-lg overflow-hidden border cursor-pointer"
+                            onClick={() => handleImageClick(post.id)}
+                            animate={{ 
+                                scale: zoomedImageId === post.id ? 1.1 : 1,
+                                rotateY: zoomedImageId === post.id ? 10 : 0
+                            }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                            style={{ perspective: '1000px' }}
+                        >
                             <Image 
                                 src={post.image}
                                 alt="Post image"
@@ -98,7 +113,7 @@ export default function CommunityPage() {
                                 className="object-cover"
                                 data-ai-hint={post.imageHint}
                             />
-                        </div>
+                        </motion.div>
                     )}
                 </CardContent>
                 <CardFooter className="flex justify-start gap-6 border-t pt-4">
