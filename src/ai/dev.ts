@@ -7,3 +7,4 @@ import '@/ai/flows/speech-to-text.ts';
 import '@/ai/flows/get-regional-alerts.ts';
 import '@/ai/tools/weather-tool.ts';
 import '@/ai/flows/get-fertilizer-recommendation.ts';
+import '@/ai/flows/predict-yield.ts';
