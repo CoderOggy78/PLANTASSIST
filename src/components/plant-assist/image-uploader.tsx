@@ -4,7 +4,7 @@
 import { useActionState } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Camera, Leaf, Loader2, X, UploadCloud } from 'lucide-react';
+import { Camera, Leaf, Loader2, X, UploadCloud, MapPin } from 'lucide-react';
 
 import { handleImageUpload, FormState } from '@/lib/actions';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import DiseaseResult from './disease-result';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { useToast } from '@/hooks/use-toast';
 
 const initialState: FormState = {
   status: 'idle',
@@ -44,6 +45,10 @@ export default function ImageUploader() {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'denied'>('idle');
+  const { toast } = useToast();
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -68,19 +73,53 @@ export default function ImageUploader() {
 
   useEffect(() => {
     if (formState.status === 'success' && !formState.data?.diseaseName) {
-      // Clear the image for "All Clear" results after a delay
       const timer = setTimeout(() => {
         handleRemoveImage();
       }, 5000);
       return () => clearTimeout(timer);
     }
   }, [formState]);
+  
+  const requestLocation = () => {
+    setLocationStatus('loading');
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        setLocationStatus('success');
+        toast({ title: 'Location Acquired', description: 'Weather-aware recommendations will be provided.' });
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        if (error.code === error.PERMISSION_DENIED) {
+            setLocationStatus('denied');
+            toast({ variant: 'destructive', title: 'Location Denied', description: 'Weather-aware features disabled.'});
+        } else {
+            setLocationStatus('error');
+            toast({ variant: 'destructive', title: 'Location Error', description: 'Could not get your location.'});
+        }
+      }
+    );
+  };
+
 
   return (
     <div className="space-y-6">
       <Card className="overflow-hidden">
         <CardContent className="p-4 sm:p-6">
-          <form action={formAction} ref={formRef} className="space-y-4">
+          <form 
+            action={(formData) => {
+                if (location) {
+                    formData.append('latitude', String(location.latitude));
+                    formData.append('longitude', String(location.longitude));
+                }
+                formAction(formData);
+            }} 
+            ref={formRef} 
+            className="space-y-4"
+          >
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="crop-type">Crop Type (e.g., Tomato, Rice)</Label>
@@ -135,7 +174,22 @@ export default function ImageUploader() {
                 </div>
               </div>
             </div>
-            {preview && <SubmitButton />}
+            
+            <div className="flex flex-col sm:flex-row gap-2">
+                 <Button
+                    type="button"
+                    variant={locationStatus === 'success' ? 'secondary' : 'outline'}
+                    onClick={requestLocation}
+                    disabled={locationStatus === 'loading'}
+                    className="w-full sm:w-auto"
+                >
+                    {locationStatus === 'loading' && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                    {locationStatus === 'success' ? <MapPin className="mr-2 h-4 w-4 text-primary"/> : <MapPin className="mr-2 h-4 w-4"/>}
+                    Get Weather
+                </Button>
+                {preview && <SubmitButton />}
+            </div>
+
           </form>
         </CardContent>
       </Card>

@@ -1,6 +1,6 @@
 'use server';
 
-import { identifyPlantDiseaseFromImage, IdentifyPlantDiseaseFromImageOutput } from '@/ai/flows/identify-plant-disease-from-image';
+import { identifyPlantDiseaseFromImage, IdentifyPlantDiseaseFromImageInput, IdentifyPlantDiseaseFromImageOutput } from '@/ai/flows/identify-plant-disease-from-image';
 import { z } from 'zod';
 
 export type FormState = {
@@ -13,6 +13,8 @@ export type FormState = {
 const imageSchema = z.object({
   image: z.instanceof(File).refine(file => file.size > 0, 'Image is required.'),
   cropType: z.string().min(1, 'Crop type is required.'),
+  latitude: z.string().optional(),
+  longitude: z.string().optional(),
 });
 
 function fileToDataURI(file: File): Promise<string> {
@@ -28,7 +30,9 @@ function fileToDataURI(file: File): Promise<string> {
 export async function handleImageUpload(prevState: FormState, formData: FormData): Promise<FormState> {
   const validation = imageSchema.safeParse({ 
     image: formData.get('image'),
-    cropType: formData.get('cropType')
+    cropType: formData.get('cropType'),
+    latitude: formData.get('latitude'),
+    longitude: formData.get('longitude'),
   });
 
   if (!validation.success) {
@@ -39,12 +43,18 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     };
   }
 
-  const { image: file, cropType } = validation.data;
+  const { image: file, cropType, latitude, longitude } = validation.data;
 
   try {
     const photoDataUri = await fileToDataURI(file);
     
-    const result = await identifyPlantDiseaseFromImage({ photoDataUri, cropType });
+    const input: IdentifyPlantDiseaseFromImageInput = { photoDataUri, cropType };
+    if (latitude && longitude) {
+        input.latitude = parseFloat(latitude);
+        input.longitude = parseFloat(longitude);
+    }
+
+    const result = await identifyPlantDiseaseFromImage(input);
 
     if (!result) {
         return {
