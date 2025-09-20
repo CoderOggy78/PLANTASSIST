@@ -1,8 +1,9 @@
+
 'use client';
 
 import { handleUserMessage, type ChatState } from '@/lib/chat-actions';
 import { Send, Bot, User, Loader2, Mic, StopCircle, Play } from 'lucide-react';
-import { useActionState, useRef, useEffect, useState } from 'react';
+import { useActionState, useRef, useEffect, useState, useTransition } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
@@ -19,7 +20,6 @@ export default function ChatInterface() {
   const formRef = useRef<HTMLFormElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -44,7 +44,12 @@ export default function ChatInterface() {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         const formData = new FormData();
         formData.append('audioBlob', audioBlob, 'recording.webm');
-        formAction(formData);
+        
+        // Wrap the action in a transition to correctly update pending state
+        React.startTransition(() => {
+            formAction(formData);
+        });
+
         audioChunksRef.current = [];
         stream.getTracks().forEach(track => track.stop()); // Stop the microphone access
       };
