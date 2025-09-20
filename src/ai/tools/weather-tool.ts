@@ -18,17 +18,36 @@ export const getWeatherForecast = ai.defineTool(
     outputSchema: z.string(),
   },
   async ({ latitude, longitude }) => {
-    // In a real application, this would call a weather API.
-    // For this example, we'll return mock data based on the location.
-    console.log(`Fetching weather for Lat: ${latitude}, Lon: ${longitude}`);
+    const apiKey = process.env.OPENWEATHERMAP_API_KEY;
+    if (!apiKey) {
+      console.error("OpenWeatherMap API key not found.");
+      return "Weather information is currently unavailable.";
+    }
 
-    // Simple logic to return different mock weather data
-    if (latitude > 0) {
-      return 'Forecast: Sunny with a high of 25°C. Low chance of rain.';
-    } else if (longitude > 0) {
-      return 'Forecast: Cloudy with a 70% chance of heavy rain this afternoon.';
-    } else {
-      return 'Forecast: Partly cloudy with moderate winds. Good conditions for outdoor work.';
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Weather API request failed with status ${response.status}`);
+      }
+      const data = await response.json();
+      
+      const weather = data.weather[0];
+      const main = data.main;
+      const wind = data.wind;
+
+      const description = weather.description;
+      const temp = main.temp;
+      const feels_like = main.feels_like;
+      const humidity = main.humidity;
+      const wind_speed = wind.speed;
+
+      return `Forecast: ${description} with a temperature of ${temp}°C (feels like ${feels_like}°C). Humidity is at ${humidity}%, and wind speed is ${wind_speed} m/s.`;
+
+    } catch (error) {
+      console.error("Failed to fetch weather data:", error);
+      return "Could not retrieve weather forecast at this time.";
     }
   }
 );
