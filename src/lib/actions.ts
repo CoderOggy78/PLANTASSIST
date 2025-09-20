@@ -13,7 +13,6 @@ export type FormState = {
 
 const imageSchema = z.object({
   image: z.instanceof(File).refine(file => file.size > 0, 'Image is required.'),
-  cropType: z.string().min(1, 'Crop type is required.'),
   latitude: z.string().optional(),
   longitude: z.string().optional(),
 });
@@ -31,7 +30,6 @@ function fileToDataURI(file: File): Promise<string> {
 export async function handleImageUpload(prevState: FormState, formData: FormData): Promise<FormState> {
   const validation = imageSchema.safeParse({ 
     image: formData.get('image'),
-    cropType: formData.get('cropType'),
     latitude: formData.get('latitude'),
     longitude: formData.get('longitude'),
   });
@@ -44,12 +42,12 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     };
   }
 
-  const { image: file, cropType, latitude, longitude } = validation.data;
+  const { image: file, latitude, longitude } = validation.data;
 
   try {
     const photoDataUri = await fileToDataURI(file);
     
-    const input: IdentifyPlantDiseaseFromImageInput = { photoDataUri, cropType };
+    const input: IdentifyPlantDiseaseFromImageInput = { photoDataUri };
     if (latitude && longitude) {
         input.latitude = parseFloat(latitude);
         input.longitude = parseFloat(longitude);
@@ -80,5 +78,3 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     };
   }
 }
-
-    

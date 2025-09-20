@@ -2,10 +2,11 @@
 "use client";
 
 import { useEffect } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2, AlertCircle, HeartPulse, ShieldHalf, Store } from 'lucide-react';
+import { CheckCircle2, AlertCircle, HeartPulse, ShieldHalf, Store, Sparkles } from 'lucide-react';
 import { useHistory } from '@/hooks/use-history';
 import type { IdentifyPlantDiseaseFromImageOutput } from '@/ai/flows/identify-plant-disease-from-image';
 import { Button } from '../ui/button';
@@ -35,7 +36,7 @@ export default function DiseaseResult({ result, imagePreview }: DiseaseResultPro
           <div>
             <CardTitle className="text-primary">All Clear!</CardTitle>
             <CardDescription className="text-primary/80">
-              Our analysis did not detect any diseases on your plant, or the image was not a plant. Keep up the great work!
+              Our analysis identified the plant as a <strong>{result.plantName}</strong> and did not detect any diseases. Keep up the great work!
             </CardDescription>
           </div>
         </CardHeader>
@@ -50,12 +51,29 @@ export default function DiseaseResult({ result, imagePreview }: DiseaseResultPro
           <AlertCircle className="w-8 h-8 text-primary" />
           {result.diseaseName}
         </CardTitle>
-        <CardDescription className="pt-2">
-          Confidence Score: <Badge variant="secondary" className="font-semibold">{Math.round((result.confidence || 0) * 100)}%</Badge>
+        <CardDescription className="pt-2 flex flex-wrap gap-x-4 gap-y-2">
+          <span>Identified Plant: <Badge variant="outline">{result.plantName}</Badge></span>
+          <span>Confidence Score: <Badge variant="secondary" className="font-semibold">{Math.round((result.confidence || 0) * 100)}%</Badge></span>
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <Separator />
+        
+        {result.generatedImageUri && (
+             <div className="space-y-2">
+                <h3 className="text-lg font-semibold flex items-center gap-2"><Sparkles className="text-primary"/>Healthy Plant Goal</h3>
+                 <div className="relative aspect-video rounded-lg overflow-hidden border">
+                    <Image
+                        src={result.generatedImageUri}
+                        alt={`AI generated image of a healthy ${result.plantName}`}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+                <p className="text-xs text-muted-foreground text-center">AI-generated image of a healthy {result.plantName}.</p>
+            </div>
+        )}
+
         <div className="space-y-2">
           <h3 className="text-lg font-semibold flex items-center gap-2"><HeartPulse className="text-primary"/>Effects on Plant</h3>
           <p className="text-muted-foreground">{result.effects}</p>

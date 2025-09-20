@@ -4,7 +4,7 @@
 import { useActionState } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Camera, Leaf, Loader2, X, UploadCloud, MapPin } from 'lucide-react';
+import { Leaf, Loader2, X, UploadCloud, MapPin } from 'lucide-react';
 
 import { handleImageUpload, FormState } from '@/lib/actions';
 import { Button } from '@/components/ui/button';
@@ -22,7 +22,11 @@ const initialState: FormState = {
 };
 
 function SubmitButton() {
-  const { pending } = useActionState(handleImageUpload, initialState);
+  // We can't use useFormStatus here because the action is on the parent form, not this one.
+  // A simple way is to pass the pending state down from the parent.
+  // For this simple case, we'll just check the formState.
+   const { pending } = useActionState(handleImageUpload, initialState);
+
   return (
     <Button type="submit" disabled={pending} size="lg" className="w-full text-lg py-7 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg">
       {pending ? (
@@ -69,6 +73,8 @@ export default function ImageUploader() {
       fileInputRef.current.value = '';
     }
     formRef.current?.reset();
+    // Also reset the form state if you want the result to disappear
+    // This is tricky with useActionState, might need a different pattern if full reset is needed.
   };
 
   useEffect(() => {
@@ -122,17 +128,6 @@ export default function ImageUploader() {
             className="space-y-4"
           >
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="crop-type">Crop Type (e.g., Tomato, Rice)</Label>
-                <Input
-                  id="crop-type"
-                  name="cropType"
-                  type="text"
-                  placeholder="Enter the name of your crop"
-                  required
-                />
-              </div>
-
               <div className="space-y-2">
                 <Label htmlFor="plant-image" className="sr-only">Upload a Plant Image</Label>
                 <div className="relative border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-primary transition-colors bg-card/50 hover:bg-card">
@@ -208,5 +203,3 @@ export default function ImageUploader() {
     </div>
   );
 }
-
-    
