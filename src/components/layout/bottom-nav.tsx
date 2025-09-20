@@ -3,12 +3,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, UserCircle2, ScanLine, MessageSquare, Feather, Users } from 'lucide-react';
+import { Home, LineChart, UserCircle2, ScanLine, MessageSquare, Feather, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/home', label: 'Home', icon: Home },
-  { href: '/knowledge-base', label: 'Knowledge', icon: BookOpen },
+  { href: '/alerts', label: 'Alerts', icon: Feather },
   { href: 'BLANK' }, // Placeholder for the FAB
   { href: '/chat', label: 'Chat', icon: MessageSquare },
   { href: '/profile', label: 'Profile', icon: UserCircle2 },
@@ -17,6 +17,7 @@ const navItems = [
 const navItemsWithAlerts = [
   { href: '/home', label: 'Home', icon: Home },
   { href: '/alerts', label: 'Alerts', icon: Feather },
+  { href: '/progress', label: 'Progress', icon: LineChart },
   { href: 'BLANK' }, // Placeholder for the FAB
   { href: '/community', label: 'Community', icon: Users },
   { href: '/chat', label: 'Chat', icon: MessageSquare },
