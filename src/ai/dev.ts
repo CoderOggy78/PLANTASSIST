@@ -9,3 +9,4 @@ import '@/ai/tools/weather-tool.ts';
 import '@/ai/flows/get-fertilizer-recommendation.ts';
 import '@/ai/flows/predict-yield.ts';
 import '@/ai/flows/get-schemes.ts';
+import '@/ai/flows/get-weather-forecast-flow.ts';
