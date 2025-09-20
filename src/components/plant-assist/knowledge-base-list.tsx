@@ -71,11 +71,13 @@ export default function KnowledgeBaseList({ diseases }: KnowledgeBaseListProps) 
 
             return (
               <AccordionItem key={disease.name} value={disease.name} className="border-b-0">
-                <Card className="overflow-hidden">
+                <Card 
+                  className="overflow-hidden"
+                  onMouseEnter={() => handleMouseEnter(disease.name)}
+                  onMouseLeave={handleMouseLeave}
+                >
                   <AccordionTrigger 
                     className="p-4 flex items-center gap-4 text-left w-full cursor-pointer bg-card hover:bg-muted/50 hover:no-underline"
-                    onMouseEnter={() => handleMouseEnter(disease.name)}
-                    onMouseLeave={handleMouseLeave}
                   >
                     {image && (
                       <div className="relative w-20 h-16 flex-shrink-0">
@@ -116,3 +118,4 @@ export default function KnowledgeBaseList({ diseases }: KnowledgeBaseListProps) 
     </div>
   );
 }
+
