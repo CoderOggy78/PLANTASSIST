@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import AppLayout from '@/components/layout/app-layout';
 import { AuthProvider } from '@/hooks/use-auth';
 import { LocalizationProvider } from '@/hooks/use-localization';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'PlantAssist',
@@ -33,6 +34,10 @@ export default function RootLayout({
             </AuthProvider>
           </LocalizationProvider>
         </ThemeProvider>
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );
