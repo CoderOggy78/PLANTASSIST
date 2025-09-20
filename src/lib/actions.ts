@@ -13,6 +13,7 @@ export type FormState = {
 
 const imageSchema = z.object({
   image: z.instanceof(File).refine(file => file.size > 0, 'Image is required.'),
+  cropName: z.string().optional(),
   latitude: z.string().optional(),
   longitude: z.string().optional(),
 });
@@ -29,10 +30,11 @@ function fileToDataURI(file: File): Promise<string> {
 
 export async function handleImageUpload(prevState: FormState, formData: FormData): Promise<FormState> {
   const image = formData.get('image');
+  const cropName = formData.get('cropName');
   const latitude = formData.get('latitude');
   const longitude = formData.get('longitude');
 
-  const validation = imageSchema.safeParse({ image, latitude, longitude });
+  const validation = imageSchema.safeParse({ image, cropName, latitude, longitude });
 
   if (!validation.success) {
     return {
@@ -42,12 +44,15 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     };
   }
 
-  const { image: file, latitude: lat, longitude: lon } = validation.data;
+  const { image: file, cropName: crop, latitude: lat, longitude: lon } = validation.data;
 
   try {
     const photoDataUri = await fileToDataURI(file);
     
     const input: IdentifyPlantDiseaseFromImageInput = { photoDataUri };
+    if (crop) {
+        input.cropName = crop;
+    }
     if (lat && lon) {
         input.latitude = parseFloat(lat);
         input.longitude = parseFloat(lon);

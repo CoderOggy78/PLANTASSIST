@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input';
 import DiseaseResult from './disease-result';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
 
 const initialState: FormState = {
   status: 'idle',
@@ -165,6 +164,15 @@ export default function ImageUploader() {
                     </div>
                   )}
                 </div>
+              </div>
+               <div className="space-y-2">
+                <Label htmlFor="crop-name">Plant/Crop Name (Optional)</Label>
+                <Input
+                  id="crop-name"
+                  name="cropName"
+                  type="text"
+                  placeholder="e.g., Tomato, Wheat, Rose"
+                />
               </div>
             </div>
             

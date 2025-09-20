@@ -19,6 +19,7 @@ const IdentifyPlantDiseaseFromImageInputSchema = z.object({
     .describe(
       "A photo of a plant, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  cropName: z.string().optional().describe('The name of the crop as provided by the user.'),
   latitude: z.number().optional().describe('The user\'s latitude for weather-aware recommendations.'),
   longitude: z.number().optional().describe('The user\'s longitude for weather-aware recommendations.'),
 });
@@ -41,11 +42,7 @@ export async function identifyPlantDiseaseFromImage(input: IdentifyPlantDiseaseF
 
 const prompt = ai.definePrompt({
   name: 'identifyPlantDiseaseFromImagePrompt',
-  input: {schema: z.object({
-    photoDataUri: z.string(),
-    latitude: z.number().optional(),
-    longitude: z.number().optional(),
-  })},
+  input: {schema: IdentifyPlantDiseaseFromImageInputSchema},
   output: {schema: IdentifyPlantDiseaseFromImageOutputSchema.pick({
     plantName: true,
     diseaseName: true,
@@ -61,10 +58,13 @@ const prompt = ai.definePrompt({
   })},
   tools: [getWeatherForecast],
   prompt: `You are an expert plant pathologist. Your task is to identify the plant and any diseases from an image.
+  {{#if cropName}}
+  The user has specified that this plant is a {{cropName}}. Use this as a strong hint for identification.
+  {{/if}}
 
   First, determine if the image provided is of a plant. If it is not a plant, you MUST set plantName, diseaseName, confidence, effects, and remedies to null.
 
-  If the image is a plant, first identify the plant itself (e.g., "Tomato Plant", "Rose Bush"). Set the plantName field.
+  If the image is a plant, first identify the plant itself (e.g., "Tomato Plant", "Rose Bush"). Set the plantName field. If the user provided a cropName, it is likely the correct identification.
 
   Then, analyze the plant for any visible signs of known plant diseases. Focus solely on visual diagnostic elements in the picture itself. Do not speculate or make assumptions based on regional prevalence or other external factors.
 
