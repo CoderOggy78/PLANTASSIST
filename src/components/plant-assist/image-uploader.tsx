@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import DiseaseResult from './disease-result';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
 
 const initialState: FormState = {
   status: 'idle',
@@ -21,31 +22,9 @@ const initialState: FormState = {
   data: null,
 };
 
-function SubmitButton() {
-  // We can't use useFormStatus here because the action is on the parent form, not this one.
-  // A simple way is to pass the pending state down from the parent.
-  // For this simple case, we'll just check the formState.
-   const { pending } = useActionState(handleImageUpload, initialState);
-
-  return (
-    <Button type="submit" disabled={pending} size="lg" className="w-full text-lg py-7 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg">
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-          Identifying...
-        </>
-      ) : (
-        <>
-          <Leaf className="mr-3 h-6 w-6" />
-          Identify Disease
-        </>
-      )}
-    </Button>
-  );
-}
 
 export default function ImageUploader() {
-  const [formState, formAction] = useActionState(handleImageUpload, initialState);
+  const [formState, formAction, isPending] = useActionState(handleImageUpload, initialState);
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -73,9 +52,27 @@ export default function ImageUploader() {
       fileInputRef.current.value = '';
     }
     formRef.current?.reset();
-    // Also reset the form state if you want the result to disappear
-    // This is tricky with useActionState, might need a different pattern if full reset is needed.
+    // A more robust way to reset the form state is needed if we want to clear results.
+    // For now, this just clears the UI.
   };
+  
+    function SubmitButton() {
+        return (
+            <Button type="submit" disabled={isPending} size="lg" className="w-full text-lg py-7 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg">
+            {isPending ? (
+                <>
+                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                Identifying...
+                </>
+            ) : (
+                <>
+                <Leaf className="mr-3 h-6 w-6" />
+                Identify Disease
+                </>
+            )}
+            </Button>
+        );
+    }
 
   useEffect(() => {
     if (formState.status === 'success' && !formState.data?.diseaseName) {

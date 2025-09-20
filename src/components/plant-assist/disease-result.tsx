@@ -86,17 +86,15 @@ export default function DiseaseResult({ result, imagePreview }: DiseaseResultPro
 
         <Separator />
         
-        <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
+        <motion.div whileTap={{ scale: 0.95 }} className="space-y-3 p-4 bg-muted/50 rounded-lg">
             <h3 className="text-lg font-semibold flex items-center gap-2"><Store className="text-primary"/>Find Remedies Nearby</h3>
             <p className="text-muted-foreground text-sm">Find local agri-shops that sell the recommended products to treat this disease.</p>
-            <motion.div whileTap={{ scale: 0.95 }}>
-                <Button asChild className="w-full sm:w-auto">
-                <Link href={`/shops/${encodeURIComponent(result.diseaseName)}`}>
-                    Find Agri-Shops Nearby
-                </Link>
-                </Button>
-            </motion.div>
-        </div>
+            <Button asChild className="w-full sm:w-auto">
+            <Link href={`/shops/${encodeURIComponent(result.diseaseName)}`}>
+                Find Agri-Shops Nearby
+            </Link>
+            </Button>
+        </motion.div>
       </CardContent>
     </Card>
   );

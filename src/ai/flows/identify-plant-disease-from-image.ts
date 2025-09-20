@@ -52,6 +52,12 @@ const prompt = ai.definePrompt({
     confidence: true,
     effects: true,
     remedies: true,
+  }).deepPartial().extend({
+      plantName: z.string().nullable(),
+      diseaseName: z.string().nullable(),
+      confidence: z.number().nullable(),
+      effects: z.string().nullable(),
+      remedies: z.string().nullable(),
   })},
   tools: [getWeatherForecast],
   prompt: `You are an expert plant pathologist. Your task is to identify the plant and any diseases from an image.
@@ -103,7 +109,11 @@ const identifyPlantDiseaseFromImageFlow = ai.defineFlow(
             console.error("Image generation failed:", error);
             // If image generation fails, return the diagnosis without the image.
             return {
-                ...diagnosis,
+                plantName: diagnosis.plantName,
+                diseaseName: diagnosis.diseaseName,
+                confidence: diagnosis.confidence,
+                effects: diagnosis.effects,
+                remedies: diagnosis.remedies,
                 generatedImageUri: null,
             };
         }
@@ -111,7 +121,11 @@ const identifyPlantDiseaseFromImageFlow = ai.defineFlow(
 
     // If no disease, just return the diagnosis without a generated image.
     return {
-        ...diagnosis,
+        plantName: diagnosis.plantName,
+        diseaseName: diagnosis.diseaseName,
+        confidence: diagnosis.confidence,
+        effects: diagnosis.effects,
+        remedies: diagnosis.remedies,
         generatedImageUri: null,
     };
   }
