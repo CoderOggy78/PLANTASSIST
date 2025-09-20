@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useActionState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Camera, Leaf, Loader2, X, UploadCloud } from 'lucide-react';
@@ -21,7 +21,7 @@ const initialState: FormState = {
 };
 
 function SubmitButton() {
-  const { pending } = useFormStatus();
+  const { pending } = useActionState();
   return (
     <Button type="submit" disabled={pending} size="lg" className="w-full text-lg py-7 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg">
       {pending ? (
@@ -81,45 +81,58 @@ export default function ImageUploader() {
       <Card className="overflow-hidden">
         <CardContent className="p-4 sm:p-6">
           <form action={formAction} ref={formRef} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="plant-image" className="sr-only">Upload a Plant Image</Label>
-              <div className="relative border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-primary transition-colors bg-card/50 hover:bg-card">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="crop-type">Crop Type (e.g., Tomato, Rice)</Label>
                 <Input
-                  id="plant-image"
-                  name="image"
-                  type="file"
-                  accept="image/*"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
+                  id="crop-type"
+                  name="cropType"
+                  type="text"
+                  placeholder="Enter the name of your crop"
                   required
                 />
-                {!preview ? (
-                  <div className="flex flex-col items-center justify-center space-y-3 text-muted-foreground pointer-events-none py-8">
-                    <UploadCloud className="w-12 h-12 text-primary" />
-                    <p className="font-semibold text-lg">Click to upload or drag & drop</p>
-                    <p className="text-sm">PNG, JPG or WEBP recommended</p>
-                  </div>
-                ) : (
-                  <div className="relative w-full h-56">
-                    <Image
-                      src={preview}
-                      alt="Plant preview"
-                      fill
-                      className="object-contain rounded-md"
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="icon"
-                      className="absolute top-2 right-2 bg-destructive/80 hover:bg-destructive text-destructive-foreground rounded-full h-8 w-8 z-10"
-                      onClick={handleRemoveImage}
-                    >
-                      <X className="w-4 h-4" />
-                      <span className="sr-only">Remove image</span>
-                    </Button>
-                  </div>
-                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="plant-image" className="sr-only">Upload a Plant Image</Label>
+                <div className="relative border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-primary transition-colors bg-card/50 hover:bg-card">
+                  <Input
+                    id="plant-image"
+                    name="image"
+                    type="file"
+                    accept="image/*"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    required
+                  />
+                  {!preview ? (
+                    <div className="flex flex-col items-center justify-center space-y-3 text-muted-foreground pointer-events-none py-8">
+                      <UploadCloud className="w-12 h-12 text-primary" />
+                      <p className="font-semibold text-lg">Click to upload or drag & drop</p>
+                      <p className="text-sm">PNG, JPG or WEBP recommended</p>
+                    </div>
+                  ) : (
+                    <div className="relative w-full h-56">
+                      <Image
+                        src={preview}
+                        alt="Plant preview"
+                        fill
+                        className="object-contain rounded-md"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2 bg-destructive/80 hover:bg-destructive text-destructive-foreground rounded-full h-8 w-8 z-10"
+                        onClick={handleRemoveImage}
+                      >
+                        <X className="w-4 h-4" />
+                        <span className="sr-only">Remove image</span>
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             {preview && <SubmitButton />}

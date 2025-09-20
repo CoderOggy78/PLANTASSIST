@@ -12,6 +12,7 @@ export type FormState = {
 
 const imageSchema = z.object({
   image: z.instanceof(File).refine(file => file.size > 0, 'Image is required.'),
+  cropType: z.string().min(1, 'Crop type is required.'),
 });
 
 function fileToDataURI(file: File): Promise<string> {
@@ -25,7 +26,11 @@ function fileToDataURI(file: File): Promise<string> {
 }
 
 export async function handleImageUpload(prevState: FormState, formData: FormData): Promise<FormState> {
-  const validation = imageSchema.safeParse({ image: formData.get('image') });
+  const validation = imageSchema.safeParse({ 
+    image: formData.get('image'),
+    cropType: formData.get('cropType')
+  });
+
   if (!validation.success) {
     return {
       status: 'error',
@@ -34,12 +39,12 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     };
   }
 
-  const file = validation.data.image;
+  const { image: file, cropType } = validation.data;
 
   try {
     const photoDataUri = await fileToDataURI(file);
     
-    const result = await identifyPlantDiseaseFromImage({ photoDataUri });
+    const result = await identifyPlantDiseaseFromImage({ photoDataUri, cropType });
 
     if (!result) {
         return {

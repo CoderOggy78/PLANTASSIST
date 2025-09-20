@@ -16,6 +16,7 @@ const IdentifyPlantDiseaseFromImageInputSchema = z.object({
     .describe(
       "A photo of a plant, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  cropType: z.string().describe('The type of crop or plant being analyzed (e.g., "Tomato", "Wheat").'),
 });
 export type IdentifyPlantDiseaseFromImageInput = z.infer<typeof IdentifyPlantDiseaseFromImageInputSchema>;
 
@@ -36,13 +37,14 @@ const prompt = ai.definePrompt({
   name: 'identifyPlantDiseaseFromImagePrompt',
   input: {schema: IdentifyPlantDiseaseFromImageInputSchema},
   output: {schema: IdentifyPlantDiseaseFromImageOutputSchema},
-  prompt: `You are an expert plant pathologist. Given an image of a plant, you will identify potential diseases affecting the plant.
+  prompt: `You are an expert plant pathologist. Given an image of a plant and its crop type, you will identify potential diseases affecting the plant.
 
   Analyze the following image and determine if there are any visible signs of known plant diseases. Focus solely on visual diagnostic elements in the picture itself.  Do not speculate or make assumptions based on regional prevalence or other external factors.
 
-  If a disease is identified, provide the disease name, a confidence level (0-1), how it affects plants, and suggested remedies.
+  If a disease is identified, provide the disease name, a confidence level (0-1), how it affects plants, and suggested remedies that are specifically tailored for the given crop type.
   If no disease is identified, set diseaseName, effects, and remedies to null, and confidence to null.
 
+  Crop Type: {{{cropType}}}
   Image: {{media url=photoDataUri}}
   `,
 });
