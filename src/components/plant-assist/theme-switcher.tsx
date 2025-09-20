@@ -23,7 +23,7 @@ export default function ThemeSwitcher() {
     // Delay the actual theme change to allow the animation to feel smoother.
     setTimeout(() => {
         setTheme(newTheme);
-    }, 300);
+    }, 2000);
   }
 
   return (
