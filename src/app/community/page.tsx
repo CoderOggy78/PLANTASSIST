@@ -71,7 +71,7 @@ export default function CommunityPage() {
         </Card>
 
         {mockPosts.map((post) => (
-             <Card key={post.id}>
+             <Card key={post.id} className="hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 <CardHeader>
                     <div className="flex items-center gap-3">
                         <Avatar>

@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <div className="relative min-h-[calc(100vh-64px)] flex items-center justify-center">
         <Image
-          src="https://picsum.photos/seed/forest-background/1800/1200"
+          src="https://picsum.photos/seed/trees/1800/1200"
           alt="Lush green forest"
           fill
           className="object-cover -z-10"
@@ -24,7 +24,7 @@ export default function HomePage() {
             </header>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-                <Card className="hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm">
+                <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3">
                         <ScanLine className="w-7 h-7 text-primary" />
@@ -38,7 +38,7 @@ export default function HomePage() {
                         </Button>
                     </CardContent>
                 </Card>
-                 <Card className="hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm">
+                 <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3">
                         <MessageSquare className="w-7 h-7 text-primary" />
@@ -52,7 +52,7 @@ export default function HomePage() {
                         </Button>
                     </CardContent>
                 </Card>
-                <Card className="hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm">
+                <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3">
                         <BookOpen className="w-7 h-7 text-primary" />
@@ -66,7 +66,7 @@ export default function HomePage() {
                         </Button>
                     </CardContent>
                 </Card>
-                <Card className="hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm">
+                <Card className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-background/80 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3">
                         <Users className="w-7 h-7 text-primary" />

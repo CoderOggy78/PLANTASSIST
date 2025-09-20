@@ -40,8 +40,8 @@ export default function BottomNav() {
               <Link key={item.href} href={item.href!} className="flex-1">
                 <div
                   className={cn(
-                    'flex flex-col items-center justify-center gap-1 text-muted-foreground transition-colors',
-                    isActive && 'text-primary'
+                    'flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-110',
+                    isActive && 'text-primary scale-110'
                   )}
                 >
                   <item.icon className="w-6 h-6" />
@@ -56,31 +56,31 @@ export default function BottomNav() {
       <nav className="fixed bottom-16 left-0 right-0 h-10 bg-card/90 backdrop-blur-sm z-10 sm:hidden">
         <div className="flex justify-around items-center h-full max-w-lg mx-auto px-2">
             <Link href="/soil-health" className="flex-1">
-                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/soil-health' && 'text-primary')}>
+                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/soil-health' && 'text-primary scale-105')}>
                     <FlaskConical className="w-5 h-5"/>
                     <span className="text-[10px] font-medium">Soil</span>
                 </div>
             </Link>
              <Link href="/diary" className="flex-1">
-                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/diary' && 'text-primary')}>
+                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/diary' && 'text-primary scale-105')}>
                     <Notebook className="w-5 h-5"/>
                     <span className="text-[10px] font-medium">Diary</span>
                 </div>
             </Link>
             <Link href="/yield-prediction" className="flex-1">
-                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/yield-prediction' && 'text-primary')}>
+                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/yield-prediction' && 'text-primary scale-105')}>
                     <AreaChart className="w-5 h-5"/>
                     <span className="text-[10px] font-medium">Yield</span>
                 </div>
             </Link>
             <Link href="/schemes" className="flex-1">
-                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/schemes' && 'text-primary')}>
+                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/schemes' && 'text-primary scale-105')}>
                     <Landmark className="w-5 h-5"/>
                     <span className="text-[10px] font-medium">Schemes</span>
                 </div>
             </Link>
             <Link href="/chat" className="flex-1">
-                 <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/chat' && 'text-primary')}>
+                 <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground transition-all duration-200 ease-in-out hover:text-primary hover:scale-105', pathname === '/chat' && 'text-primary scale-105')}>
                     <MessageSquare className="w-5 h-5"/>
                     <span className="text-[10px] font-medium">Chat</span>
                 </div>
