@@ -30,7 +30,7 @@ export default function BottomNav() {
 
   return (
     <>
-      <div className="fixed bottom-20 sm:bottom-6 z-20 w-full flex justify-center pointer-events-none">
+      <div className="fixed bottom-8 sm:bottom-6 z-20 w-full flex justify-center pointer-events-none">
           <Link href="/" passHref className="pointer-events-auto">
               <div className="bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center shadow-lg hover:bg-primary/90 transition-transform hover:scale-110">
                   <ScanLine className="h-8 w-8" />
