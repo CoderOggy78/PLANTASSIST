@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LineChart, UserCircle2, ScanLine, MessageSquare, Feather, Users, CalendarDays, FlaskConical, Notebook, AreaChart } from 'lucide-react';
+import { Home, LineChart, UserCircle2, ScanLine, MessageSquare, Feather, Users, CalendarDays, FlaskConical, Notebook, AreaChart, Landmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function BottomNav() {
@@ -71,6 +71,12 @@ export default function BottomNav() {
                 <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/yield-prediction' && 'text-primary')}>
                     <AreaChart className="w-5 h-5"/>
                     <span className="text-[10px] font-medium">Yield</span>
+                </div>
+            </Link>
+            <Link href="/schemes" className="flex-1">
+                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/schemes' && 'text-primary')}>
+                    <Landmark className="w-5 h-5"/>
+                    <span className="text-[10px] font-medium">Schemes</span>
                 </div>
             </Link>
             <Link href="/chat" className="flex-1">

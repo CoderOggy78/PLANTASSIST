@@ -8,3 +8,4 @@ import '@/ai/flows/get-regional-alerts.ts';
 import '@/ai/tools/weather-tool.ts';
 import '@/ai/flows/get-fertilizer-recommendation.ts';
 import '@/ai/flows/predict-yield.ts';
+import '@/ai/flows/get-schemes.ts';
