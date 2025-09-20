@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useFormStatus } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Camera, Leaf, Loader2, X, UploadCloud } from 'lucide-react';
@@ -40,7 +40,7 @@ function SubmitButton() {
 }
 
 export default function ImageUploader() {
-  const [formState, formAction] = useFormState(handleImageUpload, initialState);
+  const [formState, formAction] = useActionState(handleImageUpload, initialState);
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
