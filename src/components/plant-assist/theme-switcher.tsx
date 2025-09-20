@@ -34,7 +34,7 @@ export default function ThemeSwitcher() {
             style={{
                 left: selectedTheme === 'light' ? '4px' : 'calc(50% + 2px)',
             }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            transition={{ type: "tween", duration: 0.7, ease: "easeInOut" }}
         />
       <Button
         variant="ghost"
