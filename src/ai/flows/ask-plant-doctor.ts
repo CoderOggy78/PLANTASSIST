@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A conversational AI flow for answering plant-related questions.
@@ -10,6 +11,7 @@ import {z} from 'genkit';
 import wav from 'wav';
 import {googleAI} from '@genkit-ai/googleai';
 import { AskPlantDoctorOutput, AskPlantDoctorOutputSchema } from '@/lib/types';
+import { findDiseaseInfo } from '@/ai/tools/disease-knowledge-base-tool';
 
 
 export async function askPlantDoctor(question: string): Promise<AskPlantDoctorOutput> {
@@ -20,9 +22,14 @@ const prompt = ai.definePrompt({
   name: 'askPlantDoctorPrompt',
   input: {schema: z.string()},
   output: {schema: z.string()},
-  prompt: `You are PlantBot, an expert botanist and agricultural assistant. Your role is to answer user questions about plant health, farming techniques, and disease remedies.
+  tools: [findDiseaseInfo],
+  prompt: `You are PlantBot, an expert agricultural assistant. Your role is to answer user questions about plant diseases.
 
-  Be friendly, encouraging, and provide clear, actionable advice. If you don't know the answer, say so. Do not make up information.
+  If the user asks for information about a specific disease, you MUST use the findDiseaseInfo tool to get the details from the knowledge base.
+  
+  When presenting the information, format it clearly for the user. If the tool returns no information, politely inform the user that the disease is not in the knowledge base.
+
+  For general questions not related to a specific disease, answer them based on your expertise in botany and agriculture. Be friendly, encouraging, and provide clear, actionable advice. If you don't know the answer, say so. Do not make up information.
 
   User Question: {{{input}}}`,
 });
