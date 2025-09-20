@@ -87,12 +87,8 @@ export const likePostFirestore = async (postId: string, userId: string) => {
 
 export const addCommentFirestore = async (postId: string, commentData: Comment) => {
     const postRef = doc(db, 'posts', postId);
-    
-    // Ensure the commentData is a plain object for Firestore
-    const commentObject = JSON.parse(JSON.stringify(commentData));
-
     await updateDoc(postRef, {
-        comments: arrayUnion(commentObject)
+        comments: arrayUnion(commentData)
     });
 };
 
@@ -100,3 +96,4 @@ export const getPostsCount = async () => {
     const snapshot = await getDocs(postsCollection);
     return snapshot.size;
 }
+
