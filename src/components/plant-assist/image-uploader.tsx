@@ -22,7 +22,7 @@ const initialState: FormState = {
 };
 
 function SubmitButton() {
-  const { pending } = useActionState();
+  const { pending } = useActionState(handleImageUpload, initialState);
   return (
     <Button type="submit" disabled={pending} size="lg" className="w-full text-lg py-7 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg">
       {pending ? (
@@ -78,6 +78,7 @@ export default function ImageUploader() {
       }, 5000);
       return () => clearTimeout(timer);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState]);
   
   const requestLocation = () => {
@@ -207,3 +208,5 @@ export default function ImageUploader() {
     </div>
   );
 }
+
+    
