@@ -11,6 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { getWeatherForecast } from '@/ai/tools/weather-tool';
+import { googleAI } from '@genkit-ai/googleai';
 
 const IdentifyPlantDiseaseFromImageInputSchema = z.object({
   photoDataUri: z
@@ -45,12 +46,12 @@ const prompt = ai.definePrompt({
     latitude: z.number().optional(),
     longitude: z.number().optional(),
   })},
-  output: {schema: z.object({
-    plantName: z.string().nullable().describe('The identified name of the plant, or null if not a plant.'),
-    diseaseName: z.string().nullable().describe('The name of the identified disease, or null if no disease is identified or the image is not a plant.'),
-    confidence: z.number().nullable().describe('The confidence level of the disease identification (0-1), or null if no disease is identified.'),
-    effects: z.string().nullable().describe('How the disease affects plants, or null if no disease is identified.'),
-    remedies: z.string().nullable().describe('Suggested remedies for the disease, or null if no disease is identified.'),
+  output: {schema: IdentifyPlantDiseaseFromImageOutputSchema.pick({
+    plantName: true,
+    diseaseName: true,
+    confidence: true,
+    effects: true,
+    remedies: true,
   })},
   tools: [getWeatherForecast],
   prompt: `You are an expert plant pathologist. Your task is to identify the plant and any diseases from an image.

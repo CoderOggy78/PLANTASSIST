@@ -28,11 +28,11 @@ function fileToDataURI(file: File): Promise<string> {
 }
 
 export async function handleImageUpload(prevState: FormState, formData: FormData): Promise<FormState> {
-  const validation = imageSchema.safeParse({ 
-    image: formData.get('image'),
-    latitude: formData.get('latitude'),
-    longitude: formData.get('longitude'),
-  });
+  const image = formData.get('image');
+  const latitude = formData.get('latitude');
+  const longitude = formData.get('longitude');
+
+  const validation = imageSchema.safeParse({ image, latitude, longitude });
 
   if (!validation.success) {
     return {
@@ -42,15 +42,15 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     };
   }
 
-  const { image: file, latitude, longitude } = validation.data;
+  const { image: file, latitude: lat, longitude: lon } = validation.data;
 
   try {
     const photoDataUri = await fileToDataURI(file);
     
     const input: IdentifyPlantDiseaseFromImageInput = { photoDataUri };
-    if (latitude && longitude) {
-        input.latitude = parseFloat(latitude);
-        input.longitude = parseFloat(longitude);
+    if (lat && lon) {
+        input.latitude = parseFloat(lat);
+        input.longitude = parseFloat(lon);
     }
 
     const result = await identifyPlantDiseaseFromImage(input);
@@ -78,3 +78,4 @@ export async function handleImageUpload(prevState: FormState, formData: FormData
     };
   }
 }
+
