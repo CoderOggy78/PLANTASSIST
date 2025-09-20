@@ -3,29 +3,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LineChart, UserCircle2, ScanLine, MessageSquare, Feather, Users, CalendarDays, FlaskConical } from 'lucide-react';
+import { Home, LineChart, UserCircle2, ScanLine, MessageSquare, Feather, Users, CalendarDays, FlaskConical, Notebook } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const navItems = [
-  { href: '/home', label: 'Home', icon: Home },
-  { href: '/alerts', label: 'Alerts', icon: Feather },
-  { href: 'BLANK' }, // Placeholder for the FAB
-  { href: '/chat', label: 'Chat', icon: MessageSquare },
-  { href: '/profile', label: 'Profile', icon: UserCircle2 },
-];
-
-const navItemsWithAlerts = [
-  { href: '/home', label: 'Home', icon: Home },
-  { href: '/alerts', label: 'Alerts', icon: Feather },
-  { href: '/progress', label: 'Progress', icon: LineChart },
-  { href: '/soil-health', label: 'Soil', icon: FlaskConical },
-  { href: 'BLANK' }, // Placeholder for the FAB
-  { href: '/calendar', label: 'Calendar', icon: CalendarDays },
-  { href: '/community', label: 'Community', icon: Users },
-  { href: '/chat', label: 'Chat', icon: MessageSquare },
-  { href: '/profile', label: 'Profile', icon: UserCircle2 },
-];
-
 
 export default function BottomNav() {
   const pathname = usePathname();
@@ -80,6 +59,12 @@ export default function BottomNav() {
                 <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/soil-health' && 'text-primary')}>
                     <FlaskConical className="w-5 h-5"/>
                     <span className="text-[10px] font-medium">Soil</span>
+                </div>
+            </Link>
+             <Link href="/diary" className="flex-1">
+                <div className={cn('flex flex-col items-center justify-center gap-1 text-muted-foreground', pathname === '/diary' && 'text-primary')}>
+                    <Notebook className="w-5 h-5"/>
+                    <span className="text-[10px] font-medium">Diary</span>
                 </div>
             </Link>
             <Link href="/chat" className="flex-1">
