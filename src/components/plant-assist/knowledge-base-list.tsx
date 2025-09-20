@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { Search, ShieldHalf, HeartPulse, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -22,6 +22,8 @@ interface KnowledgeBaseListProps {
 
 export default function KnowledgeBaseList({ diseases }: KnowledgeBaseListProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [openItem, setOpenItem] = useState<string | undefined>(undefined);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const filteredDiseases = diseases.filter(disease =>
     disease.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -32,6 +34,22 @@ export default function KnowledgeBaseList({ diseases }: KnowledgeBaseListProps) 
   const getImageForDisease = (diseaseName: string) => {
     return PlaceHolderImages.find(img => img.id.toLowerCase() === diseaseName.toLowerCase());
   }
+
+  const handleMouseEnter = (itemName: string) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      setOpenItem(itemName);
+    }, 500);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+  };
+
 
   return (
     <div className="space-y-6">
@@ -47,14 +65,18 @@ export default function KnowledgeBaseList({ diseases }: KnowledgeBaseListProps) 
       </div>
       
       {filteredDiseases.length > 0 ? (
-        <Accordion type="single" collapsible className="w-full space-y-2">
+        <Accordion type="single" collapsible className="w-full space-y-2" value={openItem} onValueChange={setOpenItem}>
           {filteredDiseases.map((disease) => {
             const image = getImageForDisease(disease.name);
 
             return (
               <AccordionItem key={disease.name} value={disease.name} className="border-b-0">
                 <Card className="overflow-hidden">
-                  <AccordionTrigger className="p-4 flex items-center gap-4 text-left w-full cursor-pointer bg-card hover:bg-muted/50 hover:no-underline">
+                  <AccordionTrigger 
+                    className="p-4 flex items-center gap-4 text-left w-full cursor-pointer bg-card hover:bg-muted/50 hover:no-underline"
+                    onMouseEnter={() => handleMouseEnter(disease.name)}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     {image && (
                       <div className="relative w-20 h-16 flex-shrink-0">
                         <Image
