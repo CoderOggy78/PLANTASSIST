@@ -61,36 +61,35 @@ export const deletePostFirestore = async (postId: string) => {
 
 export const likePostFirestore = async (postId: string, userId: string) => {
     const postRef = doc(db, 'posts', postId);
-    await runTransaction(db, async (transaction) => {
-        const postDoc = await transaction.get(postRef);
-        if (!postDoc.exists()) {
-            throw "Document does not exist!";
-        }
+    const postDoc = await getDoc(postRef);
+
+    if (!postDoc.exists()) {
+        throw "Document does not exist!";
+    }
         
-        const data = postDoc.data();
-        const likedBy = data.likedBy || [];
+    const data = postDoc.data();
+    const likedBy = data.likedBy || [];
         
-        if (likedBy.includes(userId)) {
-            // User has liked, so unlike
-            transaction.update(postRef, {
-                likes: (data.likes || 1) - 1,
-                likedBy: arrayRemove(userId)
-            });
-        } else {
-            // User has not liked, so like
-            transaction.update(postRef, {
-                likes: (data.likes || 0) + 1,
-                likedBy: arrayUnion(userId)
-            });
-        }
-    });
+    if (likedBy.includes(userId)) {
+        // User has liked, so unlike
+        await updateDoc(postRef, {
+            likes: (data.likes || 1) - 1,
+            likedBy: arrayRemove(userId)
+        });
+    } else {
+        // User has not liked, so like
+        await updateDoc(postRef, {
+            likes: (data.likes || 0) + 1,
+            likedBy: arrayUnion(userId)
+        });
+    }
 }
 
 export const addCommentFirestore = async (postId: string, commentData: Comment) => {
     const postRef = doc(db, 'posts', postId);
     
     // Ensure the commentData is a plain object for Firestore
-    const commentObject = { ...commentData };
+    const commentObject = JSON.parse(JSON.stringify(commentData));
 
     await updateDoc(postRef, {
         comments: arrayUnion(commentObject)

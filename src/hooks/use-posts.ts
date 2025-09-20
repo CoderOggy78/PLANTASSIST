@@ -154,7 +154,7 @@ export function usePosts() {
         return;
     }
     const newComment: Comment = {
-        id: new Date().toISOString(),
+        id: new Date().toISOString(), // Unique ID for the comment
         authorId: user.uid,
         authorName: user.displayName || 'Anonymous Farmer',
         authorAvatar: user.photoURL || `https://picsum.photos/seed/${user.uid}/100`,

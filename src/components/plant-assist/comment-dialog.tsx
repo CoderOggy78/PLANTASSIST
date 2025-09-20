@@ -35,21 +35,23 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
   };
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
+    if (isOpen && scrollAreaRef.current) {
         // A slight delay ensures the new comment is rendered before we scroll
         setTimeout(() => {
-            scrollAreaRef.current?.scrollTo({
-                top: scrollAreaRef.current.scrollHeight,
-                behavior: 'smooth'
-            });
+            if (scrollAreaRef.current) {
+                scrollAreaRef.current.scrollTo({
+                    top: scrollAreaRef.current.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
         }, 100);
     }
-  }, [post?.comments.length, isOpen]);
+  }, [post?.comments?.length, isOpen]);
 
   if (!post) return null;
   
-  // Ensure comments is an array
-  const comments = Array.isArray(post.comments) ? post.comments : [];
+  // Ensure comments is an array and sort it
+  const sortedComments = Array.isArray(post.comments) ? [...post.comments].sort((a,b) => a.timestamp - b.timestamp) : [];
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -62,10 +64,8 @@ export default function CommentDialog({ post, isOpen, onOpenChange, onAddComment
         </DialogHeader>
         <ScrollArea className="flex-1 px-6" ref={scrollAreaRef}>
           <div className="space-y-4">
-            {comments.length > 0 ? (
-                comments
-                .sort((a,b) => a.timestamp - b.timestamp)
-                .map((comment: Comment) => (
+            {sortedComments.length > 0 ? (
+                sortedComments.map((comment: Comment) => (
                     <div key={comment.id} className="flex items-start gap-3">
                         <Avatar className="w-8 h-8">
                             <AvatarImage src={comment.authorAvatar} data-ai-hint="person avatar"/>
