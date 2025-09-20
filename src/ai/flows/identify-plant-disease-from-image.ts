@@ -49,7 +49,7 @@ const prompt = ai.definePrompt({
 
   If a disease is identified, provide the disease name, a confidence level (0-1), how it affects plants, and suggested remedies.
   
-  If the user provides their location (latitude and longitude), you MUST use the getWeatherForecast tool to get the current weather. Based on the forecast, you MUST tailor your remedy suggestions. For example, if it is currently raining or rain is forecasted, advise the user to avoid spraying and suggest alternative application methods or to wait for a dry period. If it is very windy, suggest spraying early in the morning.
+  If the user provides their location (latitude and longitude), you MUST use the getWeatherForecast tool to get the upcoming week's weather forecast. Based on the forecast, you MUST tailor your remedy suggestions. For example, if rain is forecasted in the coming days, advise the user to avoid spraying and suggest alternative application methods or to wait for a dry period. If it is very windy, suggest spraying early in the morning when winds are calmer.
   
   If the image is a plant but no disease is identified, set diseaseName, effects, and remedies to null, and confidence to null.
 
