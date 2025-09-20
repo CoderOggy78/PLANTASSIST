@@ -9,11 +9,11 @@ export default function HomePage() {
   return (
     <div className="relative min-h-[calc(100vh-64px)] flex items-center justify-center">
         <Image
-          src="https://picsum.photos/seed/farmer-field/1800/1200"
-          alt="Farmer inspecting crops in a field"
+          src="https://picsum.photos/seed/forest-background/1800/1200"
+          alt="Lush green forest"
           fill
           className="object-cover -z-10"
-          data-ai-hint="farmer field"
+          data-ai-hint="forest trees"
         />
         <div className="absolute inset-0 bg-background/60 dark:bg-background/80 -z-10" />
 
