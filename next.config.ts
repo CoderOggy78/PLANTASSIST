@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -30,6 +31,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('wav');
+    }
+    return config;
+  }
 };
 
 export default nextConfig;
