@@ -61,26 +61,25 @@ const askPlantDoctorFlow = ai.defineFlow(
     outputSchema: AskPlantDoctorOutputSchema,
   },
   async question => {
-    const [{output: text}, {media}] = await Promise.all([
-        prompt(question),
-        ai.generate({
-            model: googleAI.model('gemini-2.5-flash-preview-tts'),
-            config: {
-              responseModalities: ['AUDIO'],
-              speechConfig: {
-                voiceConfig: {
-                  prebuiltVoiceConfig: { voiceName: 'Algenib' },
-                },
-              },
-            },
-            prompt: question,
-          })
-    ])
+    const {output: text} = await prompt(question);
 
     if (!text) {
         throw new Error('No text response from AI');
     }
     
+    const {media} = await ai.generate({
+        model: googleAI.model('gemini-2.5-flash-preview-tts'),
+        config: {
+          responseModalities: ['AUDIO'],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: 'Algenib' },
+            },
+          },
+        },
+        prompt: text, // Use the generated text for TTS
+    });
+
     if (!media) {
         return { text };
     }
