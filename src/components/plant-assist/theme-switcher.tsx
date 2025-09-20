@@ -23,7 +23,7 @@ export default function ThemeSwitcher() {
     // Delay the actual theme change to allow the animation to feel smoother.
     setTimeout(() => {
         setTheme(newTheme);
-    }, 1000);
+    }, 700);
   }
 
   return (
@@ -49,7 +49,7 @@ export default function ThemeSwitcher() {
         variant="ghost"
         size="sm"
         onClick={() => handleThemeChange('dark')}
-        className={cn('w-full z-10', selectedTheme === 'dark' ? 'text-foreground' : 'text-muted-foreground')}
+        className={cn('w_full z-10', selectedTheme === 'dark' ? 'text-foreground' : 'text-muted-foreground')}
       >
         <Moon className="h-5 w-5 mr-2" />
         Dark
