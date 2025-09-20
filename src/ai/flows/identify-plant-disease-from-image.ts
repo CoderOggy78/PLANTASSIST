@@ -52,7 +52,7 @@ const prompt = ai.definePrompt({
     confidence: true,
     effects: true,
     remedies: true,
-  }).deepPartial().extend({
+  }).extend({
       plantName: z.string().nullable(),
       diseaseName: z.string().nullable(),
       confidence: z.number().nullable(),
