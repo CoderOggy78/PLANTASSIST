@@ -174,7 +174,7 @@ export function usePosts() {
     };
     const updatedPosts = posts.map(p => {
         if (p.id === postId) {
-            const existingComments = p.comments || [];
+            const existingComments = Array.isArray(p.comments) ? p.comments : [];
             return { ...p, comments: [...existingComments, newComment] };
         }
         return p;
