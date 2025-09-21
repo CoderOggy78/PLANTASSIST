@@ -42,57 +42,56 @@ export interface Post {
 
 const initialMockPosts: Omit<Post, 'id'>[] = [
   {
-    authorId: 'mock-user-1',
-    authorName: 'Aarav Sharma',
-    authorAvatar: 'https://picsum.photos/seed/avatar1/100',
-    authorAvatarFallback: 'AS',
-    text: "My tomato plants are getting these weird yellow spots on the leaves. I've tried neem oil but it doesn't seem to be working. Any suggestions?",
-    image: 'https://picsum.photos/seed/sick-plant/600/400',
-    imageHint: 'diseased plant',
-    likes: 12,
+    authorId: 'mock-user-organic',
+    authorName: 'Meera Reddy',
+    authorAvatar: 'https://picsum.photos/seed/avatar-meera/100',
+    authorAvatarFallback: 'MR',
+    text: "I've been dealing with a stubborn aphid problem on my hibiscus plants. I want to stick to organic methods. Has anyone had success with a homemade soap spray? What recipe did you use?",
+    image: 'https://picsum.photos/seed/aphids-plant/600/400',
+    imageHint: 'aphids plant',
+    likes: 18,
     likedBy: [],
     comments: [
-        { id: 'comment-1-1', authorId: 'mock-user-2', authorName: 'Priya Patel', authorAvatar: 'https://picsum.photos/seed/avatar2/100', authorAvatarFallback: 'PP', text: 'It might be a nutrient deficiency. Have you checked your soil pH?', timestamp: Date.now() - 1000 * 60 * 30 },
-        { id: 'comment-1-2', authorId: 'mock-user-3', authorName: 'Rohan Gupta', authorAvatar: 'https://picsum.photos/seed/avatar3/100', authorAvatarFallback: 'RG', text: 'Looks like early blight. A copper-based fungicide should help.', timestamp: Date.now() - 1000 * 60 * 15 },
+        { id: 'comment-organic-1', authorId: 'mock-user-vikram', authorName: 'Vikram Singh', authorAvatar: 'https://picsum.photos/seed/avatar-vikram/100', authorAvatarFallback: 'VS', text: 'A simple mix of 1 tablespoon of mild dish soap in 1 liter of water works wonders for me. Spray it in the evening to avoid leaf burn!', timestamp: Date.now() - 1000 * 60 * 45 },
     ],
-    timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
+    timestamp: Date.now() - 1000 * 60 * 60 * 3, // 3 hours ago
   },
   {
-    authorId: 'mock-user-2',
-    authorName: 'Priya Patel',
-    authorAvatar: 'https://picsum.photos/seed/avatar2/100',
-    authorAvatarFallback: 'PP',
-    text: "Just wanted to share my success with using a baking soda spray for powdery mildew on my zucchini! Here's a before and after. So happy with the results!",
-    image: 'https://picsum.photos/seed/harvest/600/400',
-    imageHint: 'bountiful harvest',
-    likes: 34,
+    authorId: 'mock-user-compost',
+    authorName: 'Sunita Chauhan',
+    authorAvatar: 'https://picsum.photos/seed/avatar-sunita/100',
+    authorAvatarFallback: 'SC',
+    text: "After six months of patience, my first compost batch is finally ready! The soil looks so rich and dark. Can't wait to add this 'black gold' to my vegetable beds this weekend.",
+    image: 'https://picsum.photos/seed/compost-soil/600/400',
+    imageHint: 'compost soil',
+    likes: 42,
     likedBy: [],
     comments: [],
-    timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 day ago
+    timestamp: Date.now() - 1000 * 60 * 60 * 22, // 22 hours ago
   },
   {
-    authorId: 'mock-user-4',
-    authorName: 'Sanjay Kumar',
-    authorAvatar: 'https://picsum.photos/seed/avatar4/100',
-    authorAvatarFallback: 'SK',
-    text: "Has anyone tried intercropping with marigolds to deter pests? I'm thinking of planting them between my vegetable rows this season.",
-    likes: 21,
-    likedBy: [],
-    comments: [],
-    timestamp: Date.now() - 1000 * 60 * 60 * 8, // 8 hours ago
-  },
-  {
-    authorId: 'mock-user-5',
-    authorName: 'Anika Singh',
-    authorAvatar: 'https://picsum.photos/seed/avatar5/100',
-    authorAvatarFallback: 'AS',
-    text: "Warning to farmers in the northern region: I've spotted signs of Leaf Rust on my wheat crop. Be sure to check your fields!",
-    image: 'https://picsum.photos/seed/wheat-field/600/400',
-    imageHint: 'wheat field',
-    likes: 45,
+    authorId: 'mock-user-harvest',
+    authorName: 'Rajesh Kumar',
+    authorAvatar: 'https://picsum.photos/seed/avatar-rajesh/100',
+    authorAvatarFallback: 'RK',
+    text: "The first sunflower of the season just bloomed! It's always such a rewarding sight. Hope everyone's having a productive week in their gardens.",
+    image: 'https://picsum.photos/seed/sunflower-bloom/600/400',
+    imageHint: 'sunflower bloom',
+    likes: 57,
     likedBy: [],
     comments: [],
     timestamp: Date.now() - 1000 * 60 * 60 * 48, // 2 days ago
+  },
+  {
+    authorId: 'mock-user-question',
+    authorName: 'Fatima Ansari',
+    authorAvatar: 'https://picsum.photos/seed/avatar-fatima/100',
+    authorAvatarFallback: 'FA',
+    text: "Quick question for the community: Is it too late in the season to plant a new batch of spinach? I'm in the central plains region and the weather seems mild. Any thoughts?",
+    likes: 8,
+    likedBy: [],
+    comments: [],
+    timestamp: Date.now() - 1000 * 60 * 90, // 90 minutes ago
   }
 ];
 
