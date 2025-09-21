@@ -40,23 +40,7 @@ export interface Post {
   isLiked?: boolean; // Client-side state
 }
 
-const initialMockPosts: Omit<Post, 'id'>[] = [
-    {
-      authorId: 'mock-user-tomato',
-      authorName: 'Anjali Sharma',
-      authorAvatar: 'https://picsum.photos/seed/avatar-anjali/100',
-      authorAvatarFallback: 'AS',
-      text: "My tomato plants are looking a bit yellow at the bottom. I'm thinking it's a nitrogen deficiency. Has anyone else seen this? What's the best organic fertilizer to fix it?",
-      image: 'https://picsum.photos/seed/tomato-plant/600/400',
-      imageHint: 'tomato plant',
-      likes: 24,
-      likedBy: [],
-      comments: [
-          { id: 'comment-tomato-1', authorId: 'mock-user-vikram', authorName: 'Vikram Singh', authorAvatar: 'https://picsum.photos/seed/avatar-vikram/100', authorAvatarFallback: 'VS', text: 'Definitely looks like a nitrogen issue. A good dose of compost tea or some fish emulsion should help green them up!', timestamp: Date.now() - 1000 * 60 * 30 },
-      ],
-      timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
-    },
-  ];
+const initialMockPosts: Omit<Post, 'id'>[] = [];
 
 
 export function usePosts() {
@@ -68,7 +52,7 @@ export function usePosts() {
   useEffect(() => {
     const initializePosts = async () => {
         const count = await getPostsCount();
-        if (count === 0) {
+        if (count === 0 && initialMockPosts.length > 0) {
             console.log("No posts found in Firestore, populating with mock data...");
             for (const postData of initialMockPosts) {
                 await addPostFirestore(postData);
