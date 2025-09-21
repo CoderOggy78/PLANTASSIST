@@ -41,59 +41,61 @@ export interface Post {
 }
 
 const initialMockPosts: Omit<Post, 'id'>[] = [
-  {
-    authorId: 'mock-user-organic',
-    authorName: 'Meera Reddy',
-    authorAvatar: 'https://picsum.photos/seed/avatar-meera/100',
-    authorAvatarFallback: 'MR',
-    text: "I've been dealing with a stubborn aphid problem on my hibiscus plants. I want to stick to organic methods. Has anyone had success with a homemade soap spray? What recipe did you use?",
-    image: 'https://picsum.photos/seed/aphids-plant/600/400',
-    imageHint: 'aphids plant',
-    likes: 18,
-    likedBy: [],
-    comments: [
-        { id: 'comment-organic-1', authorId: 'mock-user-vikram', authorName: 'Vikram Singh', authorAvatar: 'https://picsum.photos/seed/avatar-vikram/100', authorAvatarFallback: 'VS', text: 'A simple mix of 1 tablespoon of mild dish soap in 1 liter of water works wonders for me. Spray it in the evening to avoid leaf burn!', timestamp: Date.now() - 1000 * 60 * 45 },
-    ],
-    timestamp: Date.now() - 1000 * 60 * 60 * 3, // 3 hours ago
-  },
-  {
-    authorId: 'mock-user-compost',
-    authorName: 'Sunita Chauhan',
-    authorAvatar: 'https://picsum.photos/seed/avatar-sunita/100',
-    authorAvatarFallback: 'SC',
-    text: "After six months of patience, my first compost batch is finally ready! The soil looks so rich and dark. Can't wait to add this 'black gold' to my vegetable beds this weekend.",
-    image: 'https://picsum.photos/seed/compost-soil/600/400',
-    imageHint: 'compost soil',
-    likes: 42,
-    likedBy: [],
-    comments: [],
-    timestamp: Date.now() - 1000 * 60 * 60 * 22, // 22 hours ago
-  },
-  {
-    authorId: 'mock-user-harvest',
-    authorName: 'Rajesh Kumar',
-    authorAvatar: 'https://picsum.photos/seed/avatar-rajesh/100',
-    authorAvatarFallback: 'RK',
-    text: "The first sunflower of the season just bloomed! It's always such a rewarding sight. Hope everyone's having a productive week in their gardens.",
-    image: 'https://picsum.photos/seed/sunflower-bloom/600/400',
-    imageHint: 'sunflower bloom',
-    likes: 57,
-    likedBy: [],
-    comments: [],
-    timestamp: Date.now() - 1000 * 60 * 60 * 48, // 2 days ago
-  },
-  {
-    authorId: 'mock-user-question',
-    authorName: 'Fatima Ansari',
-    authorAvatar: 'https://picsum.photos/seed/avatar-fatima/100',
-    authorAvatarFallback: 'FA',
-    text: "Quick question for the community: Is it too late in the season to plant a new batch of spinach? I'm in the central plains region and the weather seems mild. Any thoughts?",
-    likes: 8,
-    likedBy: [],
-    comments: [],
-    timestamp: Date.now() - 1000 * 60 * 90, // 90 minutes ago
-  }
-];
+    {
+      authorId: 'mock-user-tomato',
+      authorName: 'Anjali Sharma',
+      authorAvatar: 'https://picsum.photos/seed/avatar-anjali/100',
+      authorAvatarFallback: 'AS',
+      text: "My tomato plants are looking a bit yellow at the bottom. I'm thinking it's a nitrogen deficiency. Has anyone else seen this? What's the best organic fertilizer to fix it?",
+      image: 'https://picsum.photos/seed/tomato-plant/600/400',
+      imageHint: 'tomato plant',
+      likes: 24,
+      likedBy: [],
+      comments: [
+          { id: 'comment-tomato-1', authorId: 'mock-user-vikram', authorName: 'Vikram Singh', authorAvatar: 'https://picsum.photos/seed/avatar-vikram/100', authorAvatarFallback: 'VS', text: 'Definitely looks like a nitrogen issue. A good dose of compost tea or some fish emulsion should help green them up!', timestamp: Date.now() - 1000 * 60 * 30 },
+      ],
+      timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
+    },
+    {
+      authorId: 'mock-user-wheat',
+      authorName: 'Balwinder Singh',
+      authorAvatar: 'https://picsum.photos/seed/avatar-balwinder/100',
+      authorAvatarFallback: 'BS',
+      text: "The wheat crop is coming in nicely this year. The heads are looking full. Fingers crossed for good weather during the harvest period next month!",
+      image: 'https://picsum.photos/seed/wheat-field/600/400',
+      imageHint: 'wheat field',
+      likes: 68,
+      likedBy: [],
+      comments: [],
+      timestamp: Date.now() - 1000 * 60 * 60 * 24 * 2, // 2 days ago
+    },
+    {
+      authorId: 'mock-user-corn',
+      authorName: 'Priya Patel',
+      authorAvatar: 'https://picsum.photos/seed/avatar-priya/100',
+      authorAvatarFallback: 'PP',
+      text: "I'm seeing some strange tassels on my corn plants. Is this normal or a sign of some kind of stress? First time growing this variety.",
+      image: 'https://picsum.photos/seed/corn-tassel/600/400',
+      imageHint: 'corn tassel',
+      likes: 12,
+      likedBy: [],
+      comments: [],
+      timestamp: Date.now() - 1000 * 60 * 45, // 45 minutes ago
+    },
+    {
+      authorId: 'mock-user-marigold',
+      authorName: 'Ravi Desai',
+      authorAvatar: 'https://picsum.photos/seed/avatar-ravi/100',
+      authorAvatarFallback: 'RD',
+      text: "Planted marigolds between my vegetable rows as a natural pest deterrent. They're looking beautiful and hopefully doing their job!",
+      image: 'https://picsum.photos/seed/marigold-flower/600/400',
+      imageHint: 'marigold flower',
+      likes: 95,
+      likedBy: [],
+      comments: [],
+      timestamp: Date.now() - 1000 * 60 * 60 * 72, // 3 days ago
+    }
+  ];
 
 
 export function usePosts() {
