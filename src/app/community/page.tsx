@@ -13,6 +13,12 @@ import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import CommentDialog from '@/components/plant-assist/comment-dialog';
 import { motion } from 'framer-motion';
+import LikeAnimation from '@/components/plant-assist/like-animation';
+
+interface LikeAnimationState {
+    postId: string;
+    id: number; // Unique key for each animation instance
+}
 
 export default function CommunityPage() {
     const { user, loading: authLoading } = useAuth();
@@ -22,6 +28,7 @@ export default function CommunityPage() {
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
     const [zoomedImageId, setZoomedImageId] = useState<string | null>(null);
+    const [likeAnimations, setLikeAnimations] = useState<LikeAnimationState[]>([]);
 
     const handlePost = async () => {
         if (newPostText.trim()) {
@@ -39,6 +46,16 @@ export default function CommunityPage() {
 
     const handleImageClick = (postId: string) => {
         setZoomedImageId(zoomedImageId === postId ? null : postId);
+    };
+
+    const handleLikeClick = (postId: string) => {
+        likePost(postId);
+        // Trigger animation
+        setLikeAnimations(prev => [...prev, { postId, id: Date.now() }]);
+    };
+
+    const onAnimationComplete = (animationId: number) => {
+        setLikeAnimations(prev => prev.filter(anim => anim.id !== animationId));
     };
 
     const sortedPosts = posts.sort((a, b) => b.timestamp - a.timestamp);
@@ -117,9 +134,14 @@ export default function CommunityPage() {
                     )}
                 </CardContent>
                 <CardFooter className="flex justify-start gap-6 border-t pt-4">
-                    <Button variant="ghost" size="sm" className={cn("flex items-center gap-2 text-muted-foreground", post.isLiked && 'text-primary')} onClick={() => likePost(post.id)}>
-                        <ThumbsUp className="w-5 h-5"/> {post.likes}
-                    </Button>
+                    <div className="relative">
+                        <Button variant="ghost" size="sm" className={cn("flex items-center gap-2 text-muted-foreground", post.isLiked && 'text-primary')} onClick={() => handleLikeClick(post.id)}>
+                            <ThumbsUp className="w-5 h-5"/> {post.likes}
+                        </Button>
+                        {likeAnimations.filter(a => a.postId === post.id).map(animation => (
+                            <LikeAnimation key={animation.id} onComplete={() => onAnimationComplete(animation.id)} />
+                        ))}
+                    </div>
                     <Button variant="ghost" size="sm" className="flex items-center gap-2 text-muted-foreground" onClick={() => handleCommentClick(post)}>
                         <MessageCircle className="w-5 h-5"/> {post.comments?.length || 0} Comments
                     </Button>
