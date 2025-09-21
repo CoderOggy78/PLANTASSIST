@@ -40,7 +40,19 @@ export interface Post {
   isLiked?: boolean; // Client-side state
 }
 
-const initialMockPosts: Omit<Post, 'id'>[] = [];
+const initialMockPosts: Omit<Post, 'id'>[] = [
+    {
+        authorId: 'mockuser2',
+        authorName: 'Community Manager',
+        authorAvatar: `https://picsum.photos/seed/cm/100`,
+        authorAvatarFallback: 'C',
+        text: 'Welcome to the PlantAssist Community Forum! 🌱 Share your farming successes, ask questions, and connect with fellow farmers. Let\'s grow together!',
+        likes: 15,
+        likedBy: [],
+        comments: [],
+        timestamp: Date.now() - 86400000, // 1 day ago
+    }
+];
 
 
 export function usePosts() {

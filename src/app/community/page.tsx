@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Users, Send, ThumbsUp, MessageCircle, Loader2 } from 'lucide-react';
+import { Users, Send, ThumbsUp, MessageCircle, Loader2, Link as LinkIcon } from 'lucide-react';
 import Image from 'next/image';
 import { usePosts, Post } from '@/hooks/use-posts';
 import { useAuth } from '@/hooks/use-auth';
@@ -79,14 +79,19 @@ export default function CommunityPage() {
                         <AvatarImage src={user?.photoURL || "https://picsum.photos/seed/mainuser/100"} data-ai-hint="person avatar"/>
                         <AvatarFallback>{user?.displayName?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
                     </Avatar>
-                    <Input 
-                        placeholder="What's on your mind?" 
-                        className="flex-1" 
-                        value={newPostText}
-                        onChange={(e) => setNewPostText(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handlePost()}
-                        disabled={isPosting}
-                    />
+                    <div className="flex-1 relative">
+                        <Button variant="ghost" size="icon" className="absolute left-1.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                            <LinkIcon className="w-5 h-5"/>
+                        </Button>
+                        <Input 
+                            placeholder="What's on your mind?" 
+                            className="pl-10" 
+                            value={newPostText}
+                            onChange={(e) => setNewPostText(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handlePost()}
+                            disabled={isPosting}
+                        />
+                    </div>
                     <Button onClick={handlePost} disabled={isPosting}>
                         {isPosting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Send className="mr-2 h-4 w-4"/>} Post
                     </Button>
