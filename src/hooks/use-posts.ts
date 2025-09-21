@@ -56,45 +56,6 @@ const initialMockPosts: Omit<Post, 'id'>[] = [
       ],
       timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
     },
-    {
-      authorId: 'mock-user-wheat',
-      authorName: 'Balwinder Singh',
-      authorAvatar: 'https://picsum.photos/seed/avatar-balwinder/100',
-      authorAvatarFallback: 'BS',
-      text: "The wheat crop is coming in nicely this year. The heads are looking full. Fingers crossed for good weather during the harvest period next month!",
-      image: 'https://picsum.photos/seed/wheat-field/600/400',
-      imageHint: 'wheat field',
-      likes: 68,
-      likedBy: [],
-      comments: [],
-      timestamp: Date.now() - 1000 * 60 * 60 * 24 * 2, // 2 days ago
-    },
-    {
-      authorId: 'mock-user-corn',
-      authorName: 'Priya Patel',
-      authorAvatar: 'https://picsum.photos/seed/avatar-priya/100',
-      authorAvatarFallback: 'PP',
-      text: "I'm seeing some strange tassels on my corn plants. Is this normal or a sign of some kind of stress? First time growing this variety.",
-      image: 'https://picsum.photos/seed/corn-tassel/600/400',
-      imageHint: 'corn tassel',
-      likes: 12,
-      likedBy: [],
-      comments: [],
-      timestamp: Date.now() - 1000 * 60 * 45, // 45 minutes ago
-    },
-    {
-      authorId: 'mock-user-marigold',
-      authorName: 'Ravi Desai',
-      authorAvatar: 'https://picsum.photos/seed/avatar-ravi/100',
-      authorAvatarFallback: 'RD',
-      text: "Planted marigolds between my vegetable rows as a natural pest deterrent. They're looking beautiful and hopefully doing their job!",
-      image: 'https://picsum.photos/seed/marigold-flower/600/400',
-      imageHint: 'marigold flower',
-      likes: 95,
-      likedBy: [],
-      comments: [],
-      timestamp: Date.now() - 1000 * 60 * 60 * 72, // 3 days ago
-    }
   ];
 
 
